@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { identifyPlant } from "@/ai/flows/identify-plant";
 import { useToast } from "@/hooks/use-toast";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 export default function IdentifyPlantPage() {
   const [photoUrl, setPhotoUrl] = useState('');
@@ -16,7 +17,45 @@ export default function IdentifyPlantPage() {
   const [scientificName, setScientificName] = useState('');
   const [careTips, setCareTips] = useState('');
   const [loading, setLoading] = useState(false);
+  const [hasCameraPermission, setHasCameraPermission] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const getCameraPermission = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({video: true});
+        setHasCameraPermission(true);
+
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      } catch (error) {
+        console.error('Error accessing camera:', error);
+        setHasCameraPermission(false);
+        toast({
+          variant: 'destructive',
+          title: 'Camera Access Denied',
+          description: 'Please enable camera permissions in your browser settings to use this app.',
+        });
+      }
+    };
+
+    getCameraPermission();
+  }, []);
+
+
+  const handleCaptureImage = () => {
+    if (videoRef.current) {
+      const canvas = document.createElement('canvas');
+      canvas.width = videoRef.current.videoWidth;
+      canvas.height = videoRef.current.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx?.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+      const dataURL = canvas.toDataURL('image/png');
+      setPhotoUrl(dataURL);
+    }
+  };
 
   const handleIdentifyPlant = async () => {
     setLoading(true);
@@ -50,7 +89,7 @@ export default function IdentifyPlantPage() {
       <Card className="w-full max-w-lg mx-auto">
         <CardHeader>
           <CardTitle>Upload Plant Image</CardTitle>
-          <CardDescription>Please provide a URL to your plant image.</CardDescription>
+          <CardDescription>Please provide a URL or use your camera.</CardDescription>
         </CardHeader>
         <CardContent className="p-4 space-y-4">
           <Input
@@ -59,9 +98,27 @@ export default function IdentifyPlantPage() {
             value={photoUrl}
             onChange={(e) => setPhotoUrl(e.target.value)}
           />
-          <Button onClick={handleIdentifyPlant} disabled={loading}>
-            {loading ? "Identifying..." : "Identify Plant"}
-          </Button>
+
+           <video ref={videoRef} className="w-full aspect-video rounded-md" autoPlay muted />
+
+            { !(hasCameraPermission) && (
+                <Alert variant="destructive">
+                          <AlertTitle>Camera Access Required</AlertTitle>
+                          <AlertDescription>
+                            Please allow camera access to use this feature.
+                          </AlertDescription>
+                  </Alert>
+            )
+            }
+
+          <div className="flex justify-between">
+              <Button type="button" variant="secondary" onClick={handleCaptureImage} disabled={loading || !hasCameraPermission}>
+                Capture Image
+              </Button>
+              <Button onClick={handleIdentifyPlant} disabled={loading}>
+                {loading ? "Identifying..." : "Identify Plant"}
+              </Button>
+            </div>
 
           {photoUrl && (
             <div className="relative w-full h-64 rounded-md overflow-hidden">
