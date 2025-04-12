@@ -1,3 +1,5 @@
+"use client";
+
 import type {Metadata} from 'next';
 import {Geist, Geist_Mono} from 'next/font/google';
 import './globals.css';
@@ -15,16 +17,11 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-export const metadata: Metadata = {
-  title: 'VerdantAI',
-  description: 'Your AI-powered companion for plant care.',
-  manifest: '/manifest.json',
-};
-
 // Create a Client-Side component to wrap children with SessionProvider
 import { SessionProvider } from "next-auth/react";
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
+
 const ClientSessionProvider = ({ children }: { children: ReactNode }) => {
   return (
     <SessionProvider>
@@ -38,8 +35,21 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const metadata: Metadata = {
+    title: 'VerdantAI',
+    description: 'Your AI-powered companion for plant care.',
+    manifest: '/manifest.json',
+  };
+
   return (
     <html lang="en">
+      <head>
+        <title>{metadata.title}</title>
+        <meta name="description" content={metadata.description} />
+        <link rel="manifest" href={metadata.manifest} />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {/* Wrap the children with ClientSessionProvider */}
         <ClientSessionProvider>
