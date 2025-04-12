@@ -57,6 +57,17 @@ export default function IdentifyPlantPage() {
     }
   };
 
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleIdentifyPlant = async () => {
     setLoading(true);
     try {
@@ -89,7 +100,7 @@ export default function IdentifyPlantPage() {
       <Card className="w-full max-w-lg mx-auto">
         <CardHeader>
           <CardTitle>Upload Plant Image</CardTitle>
-          <CardDescription>Please provide a URL or use your camera.</CardDescription>
+          <CardDescription>Please provide a URL, use your camera, or select from gallery.</CardDescription>
         </CardHeader>
         <CardContent className="p-4 space-y-4">
           <Input
@@ -97,6 +108,19 @@ export default function IdentifyPlantPage() {
             placeholder="Enter image URL"
             value={photoUrl}
             onChange={(e) => setPhotoUrl(e.target.value)}
+          />
+
+           <Input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="block w-full text-sm text-slate-500
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-md file:border-0
+                file:text-sm file:font-semibold
+                file:bg-primary file:text-primary-foreground
+                hover:file:bg-primary/90
+              "
           />
 
            <video ref={videoRef} className="w-full aspect-video rounded-md" autoPlay muted />
