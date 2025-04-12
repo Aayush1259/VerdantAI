@@ -16,6 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'VerdantAI',
   description: 'Your AI-powered companion for plant care.',
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({
