@@ -2,7 +2,8 @@ import type {Metadata} from 'next';
 import {Geist, Geist_Mono} from 'next/font/google';
 import './globals.css';
 import {Toaster} from "@/components/ui/toaster";
-import { SessionProvider } from "next-auth/react";
+// Import SessionProvider at the top
+import { ReactNode } from 'react';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -20,6 +21,18 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
 };
 
+// Create a Client-Side component to wrap children with SessionProvider
+import { SessionProvider } from "next-auth/react";
+import { useSession } from 'next-auth/react';
+import { useEffect } from 'react';
+const ClientSessionProvider = ({ children }: { children: ReactNode }) => {
+  return (
+    <SessionProvider>
+      {children}
+    </SessionProvider>
+  );
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,11 +41,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <SessionProvider>
+        {/* Wrap the children with ClientSessionProvider */}
+        <ClientSessionProvider>
           {children}
           <Toaster/>
-        </SessionProvider>
+        </ClientSessionProvider>
       </body>
     </html>
   );
 }
+
