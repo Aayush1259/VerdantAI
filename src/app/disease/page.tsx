@@ -22,14 +22,14 @@ export default function DiseaseDetectionPage() {
   const [loading, setLoading] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [useCamera, setUseCamera] = useState(false); // State to toggle camera view
   const { toast } = useToast();
 
   useEffect(() => {
     const getCameraPermission = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({video: true});
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         setHasCameraPermission(true);
-
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
         }
@@ -44,9 +44,19 @@ export default function DiseaseDetectionPage() {
       }
     };
 
-    getCameraPermission();
-  }, []);
+    if (useCamera) {
+      getCameraPermission();
+    }
 
+    return () => {
+      // Clean up the video stream when the component unmounts or camera is toggled off
+      if (videoRef.current && videoRef.current.srcObject) {
+        const stream = videoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach(track => track.stop());
+        videoRef.current.srcObject = null;
+      }
+    };
+  }, [useCamera, toast]);
 
   const handleCaptureImage = () => {
     if (videoRef.current) {
@@ -57,6 +67,7 @@ export default function DiseaseDetectionPage() {
       ctx?.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
       const dataURL = canvas.toDataURL('image/png');
       setPhotoUrl(dataURL);
+      setUseCamera(false); // Disable camera after capturing image
     }
   };
 
@@ -130,27 +141,30 @@ export default function DiseaseDetectionPage() {
               "
           />
 
-          <video ref={videoRef} className="w-full aspect-video rounded-md" autoPlay muted />
+          <Button type="button" variant="secondary" onClick={() => setUseCamera(!useCamera)}>
+              {useCamera ? "Close Camera" : "Open Camera"}
+          </Button>
 
-          { !(hasCameraPermission) && (
-              <Alert variant="destructive">
-                        <AlertTitle>Camera Access Required</AlertTitle>
-                        <AlertDescription>
-                          Please allow camera access to use this feature.
-                        </AlertDescription>
-                </Alert>
-          )
-          }
+          {useCamera && hasCameraPermission && (
+            <video ref={videoRef} className="w-full aspect-video rounded-md" autoPlay muted />
+          )}
 
-          <div className="flex justify-between">
-              <Button type="button" variant="secondary" onClick={handleCaptureImage} disabled={loading || !hasCameraPermission}>
+          {useCamera && !hasCameraPermission && (
+            <Alert variant="destructive">
+              <AlertTitle>Camera Access Required</AlertTitle>
+              <AlertDescription>
+                Please allow camera access to use this feature.
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {useCamera && hasCameraPermission && (
+            <div className="flex justify-center">
+              <Button type="button" variant="secondary" onClick={handleCaptureImage} disabled={loading}>
                 Capture Image
               </Button>
-              <Button onClick={handleDetectDisease} disabled={loading}>
-                {loading ? "Detecting..." : "Detect Disease"}
-              </Button>
             </div>
-
+          )}
 
           {photoUrl && (
             <div className="relative w-full h-64 rounded-md overflow-hidden">
@@ -162,6 +176,10 @@ export default function DiseaseDetectionPage() {
               />
             </div>
           )}
+
+          <Button onClick={handleDetectDisease} disabled={loading || !photoUrl}>
+            {loading ? "Detecting..." : "Detect Disease"}
+          </Button>
         </CardContent>
       </Card>
 
