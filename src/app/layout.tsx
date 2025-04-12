@@ -19,16 +19,6 @@ const geistMono = Geist_Mono({
 
 // Create a Client-Side component to wrap children with SessionProvider
 import { SessionProvider } from "next-auth/react";
-import { useSession } from 'next-auth/react';
-import { useEffect } from 'react';
-
-const ClientSessionProvider = ({ children }: { children: ReactNode }) => {
-  return (
-    <SessionProvider>
-      {children}
-    </SessionProvider>
-  );
-};
 
 export default function RootLayout({
   children,
@@ -61,3 +51,10 @@ export default function RootLayout({
   );
 }
 
+const ClientSessionProvider = ({ children }: { children: ReactNode }) => {
+  return (
+    <SessionProvider>
+      {children}
+    </SessionProvider>
+  );
+};
