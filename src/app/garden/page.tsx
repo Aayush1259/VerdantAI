@@ -138,57 +138,62 @@ export default function MyGardenPage() {
     return <div className="container mx-auto py-10">Loading...</div>;
   }
 
-  if (!session) {
+  if (session) {
     return (
       <div className="container mx-auto py-10">
         <section className="text-center mb-8">
           <h1 className="text-3xl font-semibold mb-2">My Garden</h1>
-          <p className="text-muted-foreground">
-            Please sign up or sign in to access your garden.
-          </p>
+          <p className="text-muted-foreground">Manage your plants and set reminders.</p>
         </section>
+
+        <Card className="w-full max-w-lg mx-auto mb-8">
+          <CardHeader>
+            <CardTitle>Add Reminder</CardTitle>
+          </CardHeader>
+          <CardContent className="p-4">
+            <div className="flex space-x-2">
+              <Input
+                type="text"
+                placeholder="Enter a reminder"
+                value={newReminder}
+                onChange={e => setNewReminder(e.target.value)}
+                className="flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              />
+              <Button onClick={addReminder} disabled={loading}>
+                Add
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         <Card className="w-full max-w-lg mx-auto">
           <CardHeader>
-            <CardTitle>{isSignUp ? 'Sign Up' : 'Sign In'}</CardTitle>
+            <CardTitle>My Reminders</CardTitle>
           </CardHeader>
           <CardContent className="p-4">
-            <Input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              className="mb-4"
-            />
-            <Input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              className="mb-4"
-            />
-            <Button
-              onClick={isSignUp ? handleSignUp : handleSignIn}
-              disabled={loading}
-              className="w-full mb-4"
-            >
-              {loading
-                ? isSignUp
-                  ? 'Signing up...'
-                  : 'Signing in...'
-                : isSignUp
-                  ? 'Sign Up'
-                  : 'Sign In'}
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => setIsSignUp(prev => !prev)}
-              className="w-full"
-            >
-              {isSignUp ? 'Already have an account? Sign In' : 'Need an account? Sign Up'}
-            </Button>
+            {reminders.length > 0 ? (
+              <ul>
+                {reminders.map(reminder => (
+                  <li
+                    key={reminder.id}
+                    className="flex justify-between items-center py-2 border-b last:border-b-0"
+                  >
+                    {reminder.text}
+                    <Button variant="outline" size="sm" onClick={() => deleteReminder(reminder.id)}>
+                      Delete
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No reminders yet. Add some!</p>
+            )}
           </CardContent>
         </Card>
+
+        <div className="text-center mt-4">
+          <Button onClick={() => signOut()}>Sign Out</Button>
+        </div>
       </div>
     );
   }
@@ -197,57 +202,52 @@ export default function MyGardenPage() {
     <div className="container mx-auto py-10">
       <section className="text-center mb-8">
         <h1 className="text-3xl font-semibold mb-2">My Garden</h1>
-        <p className="text-muted-foreground">Manage your plants and set reminders.</p>
+        <p className="text-muted-foreground">
+          Please sign up or sign in to access your garden.
+        </p>
       </section>
-
-      <Card className="w-full max-w-lg mx-auto mb-8">
-        <CardHeader>
-          <CardTitle>Add Reminder</CardTitle>
-        </CardHeader>
-        <CardContent className="p-4">
-          <div className="flex space-x-2">
-            <Input
-              type="text"
-              placeholder="Enter a reminder"
-              value={newReminder}
-              onChange={e => setNewReminder(e.target.value)}
-              className="flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-            />
-            <Button onClick={addReminder} disabled={loading}>
-              Add
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
 
       <Card className="w-full max-w-lg mx-auto">
         <CardHeader>
-          <CardTitle>My Reminders</CardTitle>
+          <CardTitle>{isSignUp ? 'Sign Up' : 'Sign In'}</CardTitle>
         </CardHeader>
         <CardContent className="p-4">
-          {reminders.length > 0 ? (
-            <ul>
-              {reminders.map(reminder => (
-                <li
-                  key={reminder.id}
-                  className="flex justify-between items-center py-2 border-b last:border-b-0"
-                >
-                  {reminder.text}
-                  <Button variant="outline" size="sm" onClick={() => deleteReminder(reminder.id)}>
-                    Delete
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No reminders yet. Add some!</p>
-          )}
+          <Input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            className="mb-4"
+          />
+          <Input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            className="mb-4"
+          />
+          <Button
+            onClick={isSignUp ? handleSignUp : handleSignIn}
+            disabled={loading}
+            className="w-full mb-4"
+          >
+            {loading
+              ? isSignUp
+                ? 'Signing up...'
+                : 'Signing in...'
+              : isSignUp
+                ? 'Sign Up'
+                : 'Sign In'}
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => setIsSignUp(prev => !prev)}
+            className="w-full"
+          >
+            {isSignUp ? 'Already have an account? Sign In' : 'Need an account? Sign Up'}
+          </Button>
         </CardContent>
       </Card>
-
-      <div className="text-center mt-4">
-        <Button onClick={() => signOut()}>Sign Out</Button>
-      </div>
     </div>
   );
 }
