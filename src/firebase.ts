@@ -14,4 +14,12 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-export const app = initializeApp(firebaseConfig);
+let app;
+try {
+  app = initializeApp(firebaseConfig);
+} catch (e: any) {
+  if (e.code !== 'app/duplicate-app') {
+    console.error('Firebase initialization error', e.message);
+  }
+}
+export { app };
