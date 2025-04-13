@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { Leaf, Camera, ImagePlus } from 'lucide-react';
+import { Leaf, Camera } from 'lucide-react';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { useRouter } from 'next/navigation';
-import { Home, Shield } from 'lucide-react';
+import { Home, Shield, ImagePlus } from 'lucide-react';
 import { Icons } from '@/components/icons';
 import React from 'react';
 
@@ -181,14 +181,12 @@ export default function IdentifyPlantPage() {
                     className="hidden"
                     id="image-upload"
                 />
-                <React.Fragment>
-                  <label htmlFor="image-upload">
-                      <Button type="button" variant="outline">
-                          Choose from Gallery
-                          <ImagePlus className="ml-2 h-4 w-4" />
-                      </Button>
-                  </label>
-                </React.Fragment>
+                <label htmlFor="image-upload">
+                    <Button type="button" variant="outline">
+                        Choose from Gallery
+                        <ImagePlus className="ml-2 h-4 w-4" />
+                    </Button>
+                </label>
             </div>
 
 
