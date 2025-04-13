@@ -16,6 +16,7 @@ export default function IdentifyPlantPage() {
   const [commonName, setCommonName] = useState('');
   const [scientificName, setScientificName] = useState('');
   const [careTips, setCareTips] = useState('');
+  const [detailedAnalysis, setDetailedAnalysis] = useState('');
   const [loading, setLoading] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -86,6 +87,7 @@ export default function IdentifyPlantPage() {
       setCommonName(result.commonName);
       setScientificName(result.scientificName);
       setCareTips(result.careTips);
+      setDetailedAnalysis(result.detailedAnalysis);
       toast({
         title: "Plant Identified!",
         description: `Successfully identified the plant as ${result.commonName}.`,
@@ -189,6 +191,9 @@ export default function IdentifyPlantPage() {
                 <p>
                   <strong>Care Tips:</strong> {careTips}
                 </p>
+                <p>
+                  <strong>Detailed Analysis:</strong> {detailedAnalysis}
+                </p>
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -197,4 +202,3 @@ export default function IdentifyPlantPage() {
     </div>
   );
 }
-
