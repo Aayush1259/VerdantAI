@@ -180,23 +180,27 @@ export default function IdentifyPlantPage() {
 
       {commonName && (
         <div className="mt-8 max-w-2xl mx-auto">
-          <Accordion type="single" collapsible>
-            <AccordionItem value="plant-info">
-              <AccordionTrigger>
-                <h2 className="text-2xl font-semibold">
-                  {commonName} ({scientificName})
-                </h2>
-              </AccordionTrigger>
-              <AccordionContent>
-                <p>
-                  <strong>Care Tips:</strong> {careTips}
-                </p>
-                <p>
-                  <strong>Detailed Analysis:</strong> {detailedAnalysis}
-                </p>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+          <Card>
+            <CardHeader>
+              <CardTitle>{commonName} ({scientificName})</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Accordion type="single" collapsible>
+                <AccordionItem value="care-tips">
+                  <AccordionTrigger>
+                    <strong>Care Tips</strong>
+                  </AccordionTrigger>
+                  <AccordionContent>{careTips}</AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="detailed-analysis">
+                  <AccordionTrigger>
+                    <strong>Detailed Analysis</strong>
+                  </AccordionTrigger>
+                  <AccordionContent>{detailedAnalysis}</AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </CardContent>
+          </Card>
         </div>
       )}
     </div>

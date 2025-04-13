@@ -207,34 +207,117 @@ export default function DiseaseDetectionPage() {
 
       {diseaseDetected && (
         <div className="mt-8 max-w-2xl mx-auto">
-          <Accordion type="single" collapsible>
-            <AccordionItem value="plant-analysis">
-              <AccordionTrigger>
-                <h2 className="text-2xl font-semibold">
-                  Plant Analysis
-                </h2>
-              </AccordionTrigger>
-              <AccordionContent>
-                {detectedPlant && <p><strong>Detected Plant:</strong> {detectedPlant}</p>}
-                {quickSummary && <p><strong>Quick Summary:</strong> {quickSummary}</p>}
-                {plantCondition && <p><strong>Plant Condition:</strong> {plantCondition}</p>}
-                {likelyCauses && <p><strong>Likely Causes:</strong> {likelyCauses}</p>}
-                {recommendedActions && <p><strong>Recommended Actions:</strong> {recommendedActions}</p>}
-                {careInstructions && <p><strong>Care Instructions:</strong> {careInstructions}</p>}
-                {preventionGuide && <p><strong>Prevention Guide:</strong> {preventionGuide}</p>}
-                {additionalTips && <p><strong>Additional Tips:</strong> {additionalTips}</p>}
-                {ecosystemImpact && <p><strong>Ecosystem Impact:</strong> {ecosystemImpact}</p>}
-                {basicDiseaseInformation && <p><strong>Basic Disease Information:</strong> {basicDiseaseInformation}</p>}
-                {detailedCareInstructions && <p><strong>Detailed Care Instructions:</strong> {detailedCareInstructions}</p>}
-                {diseaseName && <h3 className="text-xl font-semibold mt-4">Disease Details</h3>}
-                {diseaseName && <p><strong>Disease Name:</strong> {diseaseName}</p>}
-                {symptoms && <p><strong>Symptoms:</strong> {symptoms}</p>}
-                {causes && <p><strong>Causes:</strong> {causes}</p>}
-                {treatments && <p><strong>Treatments:</strong> {treatments}</p>}
-                {prevention && <p><strong>Prevention:</strong> {prevention}</p>}
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+          <Card>
+            <CardHeader>
+              <CardTitle>Plant Analysis</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Accordion type="single" collapsible>
+                {detectedPlant && (
+                  <AccordionItem value="detected-plant">
+                    <AccordionTrigger>
+                      <strong>Detected Plant:</strong>
+                    </AccordionTrigger>
+                    <AccordionContent>{detectedPlant}</AccordionContent>
+                  </AccordionItem>
+                )}
+                {quickSummary && (
+                  <AccordionItem value="quick-summary">
+                    <AccordionTrigger>
+                      <strong>Quick Summary:</strong>
+                    </AccordionTrigger>
+                    <AccordionContent>{quickSummary}</AccordionContent>
+                  </AccordionItem>
+                )}
+                {plantCondition && (
+                  <AccordionItem value="plant-condition">
+                    <AccordionTrigger>
+                      <strong>Plant Condition:</strong>
+                    </AccordionTrigger>
+                    <AccordionContent>{plantCondition}</AccordionContent>
+                  </AccordionItem>
+                )}
+                {likelyCauses && (
+                  <AccordionItem value="likely-causes">
+                    <AccordionTrigger>
+                      <strong>Likely Causes:</strong>
+                    </AccordionTrigger>
+                    <AccordionContent>{likelyCauses}</AccordionContent>
+                  </AccordionItem>
+                )}
+                {recommendedActions && (
+                  <AccordionItem value="recommended-actions">
+                    <AccordionTrigger>
+                      <strong>Recommended Actions:</strong>
+                    </AccordionTrigger>
+                    <AccordionContent>{recommendedActions}</AccordionContent>
+                  </AccordionItem>
+                )}
+                {careInstructions && (
+                  <AccordionItem value="care-instructions">
+                    <AccordionTrigger>
+                      <strong>Care Instructions:</strong>
+                    </AccordionTrigger>
+                    <AccordionContent>{careInstructions}</AccordionContent>
+                  </AccordionItem>
+                )}
+                {preventionGuide && (
+                  <AccordionItem value="prevention-guide">
+                    <AccordionTrigger>
+                      <strong>Prevention Guide:</strong>
+                    </AccordionTrigger>
+                    <AccordionContent>{preventionGuide}</AccordionContent>
+                  </AccordionItem>
+                )}
+                {additionalTips && (
+                  <AccordionItem value="additional-tips">
+                    <AccordionTrigger>
+                      <strong>Additional Tips:</strong>
+                    </AccordionTrigger>
+                    <AccordionContent>{additionalTips}</AccordionContent>
+                  </AccordionItem>
+                )}
+                {ecosystemImpact && (
+                  <AccordionItem value="ecosystem-impact">
+                    <AccordionTrigger>
+                      <strong>Ecosystem Impact:</strong>
+                    </AccordionTrigger>
+                    <AccordionContent>{ecosystemImpact}</AccordionContent>
+                  </AccordionItem>
+                )}
+                {basicDiseaseInformation && (
+                  <AccordionItem value="basic-disease-information">
+                    <AccordionTrigger>
+                      <strong>Basic Disease Information:</strong>
+                    </AccordionTrigger>
+                    <AccordionContent>{basicDiseaseInformation}</AccordionContent>
+                  </AccordionItem>
+                )}
+                {detailedCareInstructions && (
+                  <AccordionItem value="detailed-care-instructions">
+                    <AccordionTrigger>
+                      <strong>Detailed Care Instructions:</strong>
+                    </AccordionTrigger>
+                    <AccordionContent>{detailedCareInstructions}</AccordionContent>
+                  </AccordionItem>
+                )}
+                {diseaseName && (
+                  <AccordionItem value="disease-details">
+                    <AccordionTrigger>
+                      <strong>Disease Details:</strong>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      {diseaseName && <p><strong>Disease Name:</strong> {diseaseName}</p>}
+                      {symptoms && <p><strong>Symptoms:</strong> {symptoms}</p>}
+                      {causes && <p><strong>Causes:</strong> {causes}</p>}
+                      {treatments && <p><strong>Treatments:</strong> {treatments}</p>}
+                      {prevention && <p><strong>Prevention:</strong> {prevention}</p>}
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
+              </Accordion>
+            </CardContent>
+          </Card>
         </div>
       )}
 
