@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { Leaf } from 'lucide-react';
+import { Leaf, Camera, ImagePlus } from 'lucide-react';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -11,6 +11,15 @@ import { identifyPlant } from "@/ai/flows/identify-plant";
 import { useToast } from "@/hooks/use-toast";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { useRouter } from 'next/navigation';
+import { Home, Shield } from 'lucide-react';
+import { Icons } from '@/components/icons';
+
+const sampleImages = [
+  'https://picsum.photos/200/300',
+  'https://picsum.photos/200/301',
+  'https://picsum.photos/200/302',
+];
 
 export default function IdentifyPlantPage() {
   const [photoUrl, setPhotoUrl] = useState('');
@@ -30,6 +39,7 @@ export default function IdentifyPlantPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [useCamera, setUseCamera] = useState(false); // State to toggle camera view
   const { toast } = useToast();
+    const router = useRouter();
 
   useEffect(() => {
     const getCameraPermission = async () => {
@@ -118,10 +128,14 @@ export default function IdentifyPlantPage() {
     }
   };
 
+    const handleSampleImageClick = (imageUrl: string) => {
+        setPhotoUrl(imageUrl);
+    };
+
   return (
     <div className="container mx-auto py-10">
       <section className="text-center mb-8">
-        <h1 className="text-3xl font-semibold mb-2">Identify Plant</h1>
+        <h1 className="text-3xl font-semibold mb-2">Plant Identification</h1>
         <p className="text-muted-foreground">Upload an image to identify the plant species.</p>
       </section>
 
@@ -131,29 +145,45 @@ export default function IdentifyPlantPage() {
           <CardDescription>Please provide a URL, use your camera, or select from gallery.</CardDescription>
         </CardHeader>
         <CardContent className="p-4 space-y-4">
-          <Input
-            type="url"
-            placeholder="Enter image URL"
-            value={photoUrl}
-            onChange={(e) => setPhotoUrl(e.target.value)}
-          />
+          {/* Image Upload Preview */}
+          {!photoUrl && (
+            <div className="relative w-full h-64 rounded-md overflow-hidden flex items-center justify-center bg-secondary">
+              <Icons.image className="h-12 w-12 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">Upload a photo to identify</p>
+            </div>
+          )}
 
-           <Input
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="block w-full text-sm text-slate-500
-                file:mr-4 file:py-2 file:px-4
-                file:rounded-md file:border-0
-                file:text-sm file:font-semibold
-                file:bg-primary file:text-primary-foreground
-                hover:file:bg-primary/90
-              "
-          />
+          {photoUrl && (
+            <div className="relative w-full h-64 rounded-md overflow-hidden">
+              <Image
+                src={photoUrl}
+                alt="Plant Image"
+                layout="fill"
+                objectFit="contain"
+              />
+            </div>
+          )}
+          <div className="flex justify-around space-x-2">
+                <Button type="button" variant="secondary" onClick={() => setUseCamera(!useCamera)}>
+                    {useCamera ? "Close Camera" : "Take Photo"}
+                    <Camera className="ml-2 h-4 w-4" />
+                </Button>
 
-          <Button type="button" variant="secondary" onClick={() => setUseCamera(!useCamera)}>
-              {useCamera ? "Close Camera" : "Open Camera"}
-          </Button>
+                <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    id="image-upload"
+                />
+                <label htmlFor="image-upload">
+                    <Button type="button" variant="outline">
+                        Choose from Gallery
+                        <ImagePlus className="ml-2 h-4 w-4" />
+                    </Button>
+                </label>
+            </div>
+
 
           {useCamera && hasCameraPermission && (
             <video ref={videoRef} className="w-full aspect-video rounded-md" autoPlay muted />
@@ -175,17 +205,24 @@ export default function IdentifyPlantPage() {
               </Button>
             </div>
           )}
-
-          {photoUrl && (
-            <div className="relative w-full h-64 rounded-md overflow-hidden">
-              <Image
-                src={photoUrl}
-                alt="Plant Image"
-                layout="fill"
-                objectFit="contain"
-              />
+            {/* Sample Images */}
+            <div>
+                <p className="text-center text-sm text-muted-foreground mt-4">Or pick a sample image:</p>
+                <div className="flex justify-center space-x-2 mt-2">
+                    {sampleImages.map((imageUrl, index) => (
+                        <Image
+                            key={index}
+                            src={imageUrl}
+                            alt={`Sample Plant ${index + 1}`}
+                            width={80}
+                            height={80}
+                            className="rounded-md cursor-pointer"
+                            onClick={() => handleSampleImageClick(imageUrl)}
+                        />
+                    ))}
+                </div>
             </div>
-          )}
+
 
           <Button onClick={handleIdentifyPlant} disabled={loading || !photoUrl}>
             {loading ? "Identifying..." : "Identify Plant"}
@@ -285,7 +322,23 @@ export default function IdentifyPlantPage() {
           </Card>
         </div>
       )}
+         {/* Bottom Navigation */}
+         <footer className="fixed bottom-0 left-0 w-full bg-secondary py-2 border-t border-gray-200">
+            <nav className="flex justify-around">
+                <Button variant="ghost" className="flex flex-col items-center justify-center" onClick={() => router.push('/')}>
+                    <Home className="h-5 w-5 mb-1" />
+                    <span className="text-xs">Home</span>
+                </Button>
+                <Button variant="ghost" className="flex flex-col items-center justify-center" onClick={() => router.push('/assistant')}>
+                    <Icons.help className="h-5 w-5 mb-1" />
+                    <span className="text-xs">Green AI</span>
+                </Button>
+                <Button variant="ghost" className="flex flex-col items-center justify-center" onClick={() => router.push('/garden')}>
+                    <Icons.user className="h-5 w-5 mb-1" />
+                    <span className="text-xs">Profile</span>
+                </Button>
+            </nav>
+        </footer>
     </div>
   );
 }
-
