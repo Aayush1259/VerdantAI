@@ -194,9 +194,9 @@ export default function DiseaseDetectionPage() {
                     accept="image/*"
                     onChange={handleImageUpload}
                     className="hidden"
-                    id="image-upload"
+                    id="disease-image-upload"
                 />
-               <label htmlFor="image-upload">
+               <label htmlFor="disease-image-upload">
                   <Button type="button" variant="outline">
                     Choose from Gallery
                     <ImagePlus className="ml-2 h-4 w-4" />

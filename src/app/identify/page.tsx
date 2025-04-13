@@ -179,9 +179,9 @@ export default function IdentifyPlantPage() {
                     accept="image/*"
                     onChange={handleImageUpload}
                     className="hidden"
-                    id="image-upload"
+                    id="identify-image-upload"
                 />
-                <label htmlFor="image-upload">
+                <label htmlFor="identify-image-upload">
                     <Button type="button" variant="outline">
                         Choose from Gallery
                         <ImagePlus className="ml-2 h-4 w-4" />
