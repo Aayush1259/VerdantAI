@@ -214,9 +214,9 @@ export default function DiseaseDetectionPage() {
             <CardHeader>
               <CardTitle>Plant Analysis</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
               {detectedPlant && (
-                <section className="mb-4">
+                <section>
                   <h3 className="text-xl font-semibold mb-2 flex items-center">
                     <Leaf className="mr-2 h-5 w-5 text-green-500" />
                     Detected Plant
@@ -226,7 +226,7 @@ export default function DiseaseDetectionPage() {
               )}
 
               {quickSummary && (
-                <section className="mb-4">
+                <section>
                   <h3 className="text-xl font-semibold mb-2 flex items-center">
                     <Shield className="mr-2 h-5 w-5 text-yellow-500" />
                     Quick Summary
@@ -235,71 +235,91 @@ export default function DiseaseDetectionPage() {
                 </section>
               )}
 
-              {plantCondition && (
-                <section className="mb-4">
-                  <h3 className="text-xl font-semibold mb-2">Plant Condition</h3>
-                  <p>{plantCondition}</p>
-                </section>
-              )}
+              <Accordion type="single" collapsible>
+                {plantCondition && (
+                  <AccordionItem value="condition">
+                    <AccordionTrigger className="text-xl font-semibold">Plant Condition</AccordionTrigger>
+                    <AccordionContent>
+                      <p>{plantCondition}</p>
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
 
-              {likelyCauses && (
-                <section className="mb-4">
-                  <h3 className="text-xl font-semibold mb-2">Likely Causes</h3>
-                  <p>{likelyCauses}</p>
-                </section>
-              )}
+                {likelyCauses && (
+                  <AccordionItem value="causes">
+                    <AccordionTrigger className="text-xl font-semibold">Likely Causes</AccordionTrigger>
+                    <AccordionContent>
+                      <p>{likelyCauses}</p>
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
 
-              {recommendedActions && (
-                <section className="mb-4">
-                  <h3 className="text-xl font-semibold mb-2">Recommended Actions</h3>
-                  <p>{recommendedActions}</p>
-                </section>
-              )}
+                {recommendedActions && (
+                  <AccordionItem value="actions">
+                    <AccordionTrigger className="text-xl font-semibold">Recommended Actions</AccordionTrigger>
+                    <AccordionContent>
+                      <p>{recommendedActions}</p>
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
 
-              {careInstructions && (
-                <section className="mb-4">
-                  <h3 className="text-xl font-semibold mb-2">Care Instructions</h3>
-                  <p>{careInstructions}</p>
-                </section>
-              )}
+                {careInstructions && (
+                  <AccordionItem value="instructions">
+                    <AccordionTrigger className="text-xl font-semibold">Care Instructions</AccordionTrigger>
+                    <AccordionContent>
+                      <p>{careInstructions}</p>
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
 
-              {preventionGuide && (
-                <section className="mb-4">
-                  <h3 className="text-xl font-semibold mb-2">Prevention Guide</h3>
-                  <p>{preventionGuide}</p>
-                </section>
-              )}
+                {preventionGuide && (
+                  <AccordionItem value="prevention">
+                    <AccordionTrigger className="text-xl font-semibold">Prevention Guide</AccordionTrigger>
+                    <AccordionContent>
+                      <p>{preventionGuide}</p>
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
 
-              {additionalTips && (
-                <section className="mb-4">
-                  <h3 className="text-xl font-semibold mb-2">Additional Tips</h3>
-                  <p>{additionalTips}</p>
-                </section>
-              )}
+                {additionalTips && (
+                  <AccordionItem value="additional">
+                    <AccordionTrigger className="text-xl font-semibold">Additional Tips</AccordionTrigger>
+                    <AccordionContent>
+                      <p>{additionalTips}</p>
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
 
-              {ecosystemImpact && (
-                <section className="mb-4">
-                  <h3 className="text-xl font-semibold mb-2">Ecosystem Impact</h3>
-                  <p>{ecosystemImpact}</p>
-                </section>
-              )}
+                {ecosystemImpact && (
+                  <AccordionItem value="ecosystem">
+                    <AccordionTrigger className="text-xl font-semibold">Ecosystem Impact</AccordionTrigger>
+                    <AccordionContent>
+                      <p>{ecosystemImpact}</p>
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
 
-              {basicDiseaseInformation && (
-                <section className="mb-4">
-                  <h3 className="text-xl font-semibold mb-2">Basic Disease Information</h3>
-                  <p>{basicDiseaseInformation}</p>
-                </section>
-              )}
+                {basicDiseaseInformation && (
+                  <AccordionItem value="diseaseinfo">
+                    <AccordionTrigger className="text-xl font-semibold">Basic Disease Information</AccordionTrigger>
+                    <AccordionContent>
+                      <p>{basicDiseaseInformation}</p>
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
 
-              {detailedCareInstructions && (
-                <section className="mb-4">
-                  <h3 className="text-xl font-semibold mb-2">Detailed Care Instructions</h3>
-                  <p>{detailedCareInstructions}</p>
-                </section>
-              )}
+                {detailedCareInstructions && (
+                  <AccordionItem value="detailedcare">
+                    <AccordionTrigger className="text-xl font-semibold">Detailed Care Instructions</AccordionTrigger>
+                    <AccordionContent>
+                      <p>{detailedCareInstructions}</p>
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
+              </Accordion>
 
               {diseaseName && (
-                <section className="mb-4">
+                <section>
                   <h3 className="text-xl font-semibold mb-2">Disease Details</h3>
                   {diseaseName && <p><strong>Disease Name:</strong> {diseaseName}</p>}
                   {symptoms && <p><strong>Symptoms:</strong> {symptoms}</p>}
@@ -310,7 +330,7 @@ export default function DiseaseDetectionPage() {
               )}
 
               {fertilizerRecommendation && (
-                <section className="mb-4">
+                <section>
                   <h3 className="text-xl font-semibold mb-2">Fertilizer Recommendation</h3>
                   <p>{fertilizerRecommendation}</p>
                 </section>

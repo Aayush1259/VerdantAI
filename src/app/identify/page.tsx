@@ -202,65 +202,85 @@ export default function IdentifyPlantPage() {
                 {commonName} ({scientificName})
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <section className="mb-4">
+            <CardContent className="space-y-4">
+              <section>
                 <h3 className="text-xl font-semibold mb-2">Care Tips</h3>
                 <p>{careTips}</p>
               </section>
 
-              <section className="mb-4">
-                <h3 className="text-xl font-semibold mb-2">Detailed Analysis</h3>
-                <p>{detailedAnalysis}</p>
-              </section>
+              <Accordion type="single" collapsible>
+                {detailedAnalysis && (
+                  <AccordionItem value="analysis">
+                    <AccordionTrigger className="text-xl font-semibold">Detailed Analysis</AccordionTrigger>
+                    <AccordionContent>
+                      <p>{detailedAnalysis}</p>
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
 
-               {growthHabit && (
-                <section className="mb-4">
-                  <h3 className="text-lg font-semibold mb-2">Growth Habit</h3>
-                  <p>{growthHabit}</p>
-                </section>
-              )}
+                {growthHabit && (
+                  <AccordionItem value="growth">
+                    <AccordionTrigger className="text-lg font-semibold">Growth Habit</AccordionTrigger>
+                    <AccordionContent>
+                      <p>{growthHabit}</p>
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
 
-              {lifespan && (
-                <section className="mb-4">
-                  <h3 className="text-lg font-semibold mb-2">Lifespan</h3>
-                  <p>{lifespan}</p>
-                </section>
-              )}
+                {lifespan && (
+                  <AccordionItem value="lifespan">
+                    <AccordionTrigger className="text-lg font-semibold">Lifespan</AccordionTrigger>
+                    <AccordionContent>
+                      <p>{lifespan}</p>
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
 
-              {lightRequirements && (
-                <section className="mb-4">
-                  <h3 className="text-lg font-semibold mb-2">Light Requirements</h3>
-                  <p>{lightRequirements}</p>
-                </section>
-              )}
+                {lightRequirements && (
+                  <AccordionItem value="light">
+                    <AccordionTrigger className="text-lg font-semibold">Light Requirements</AccordionTrigger>
+                    <AccordionContent>
+                      <p>{lightRequirements}</p>
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
 
-              {waterRequirements && (
-                <section className="mb-4">
-                  <h3 className="text-lg font-semibold mb-2">Water Requirements</h3>
-                  <p>{waterRequirements}</p>
-                </section>
-              )}
+                {waterRequirements && (
+                  <AccordionItem value="water">
+                    <AccordionTrigger className="text-lg font-semibold">Water Requirements</AccordionTrigger>
+                    <AccordionContent>
+                      <p>{waterRequirements}</p>
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
 
-              {soilPreferences && (
-                <section className="mb-4">
-                  <h3 className="text-lg font-semibold mb-2">Soil Preferences</h3>
-                  <p>{soilPreferences}</p>
-                </section>
-              )}
+                {soilPreferences && (
+                  <AccordionItem value="soil">
+                    <AccordionTrigger className="text-lg font-semibold">Soil Preferences</AccordionTrigger>
+                    <AccordionContent>
+                      <p>{soilPreferences}</p>
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
 
-              {suitableLocations && (
-                <section className="mb-4">
-                  <h3 className="text-lg font-semibold mb-2">Suitable Locations</h3>
-                  <p>{suitableLocations}</p>
-                </section>
-              )}
+                {suitableLocations && (
+                  <AccordionItem value="locations">
+                    <AccordionTrigger className="text-lg font-semibold">Suitable Locations</AccordionTrigger>
+                    <AccordionContent>
+                      <p>{suitableLocations}</p>
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
 
-              {potentialProblems && (
-                <section className="mb-4">
-                  <h3 className="text-lg font-semibold mb-2">Potential Problems</h3>
-                  <p>{potentialProblems}</p>
-                </section>
-              )}
+                {potentialProblems && (
+                  <AccordionItem value="problems">
+                    <AccordionTrigger className="text-lg font-semibold">Potential Problems</AccordionTrigger>
+                    <AccordionContent>
+                      <p>{potentialProblems}</p>
+                    </AccordionContent>
+                  </AccordionItem>
+                )}
+              </Accordion>
             </CardContent>
           </Card>
         </div>
