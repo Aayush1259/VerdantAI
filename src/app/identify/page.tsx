@@ -148,7 +148,11 @@ export default function IdentifyPlantPage() {
           {/* Image Upload Preview */}
           {!photoUrl && (
             <div className="relative w-full h-64 rounded-md overflow-hidden flex items-center justify-center bg-secondary">
-              <Icons.image className="h-12 w-12 text-muted-foreground" />
+              {Icons.image ? (
+                  <Icons.image className="h-12 w-12 text-muted-foreground" />
+                ) : (
+                  <p className="text-sm text-muted-foreground">Image Icon Missing</p>
+                )}
               <p className="text-sm text-muted-foreground">Upload a photo to identify</p>
             </div>
           )}
