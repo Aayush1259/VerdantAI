@@ -185,20 +185,15 @@ export default function IdentifyPlantPage() {
               <CardTitle>{commonName} ({scientificName})</CardTitle>
             </CardHeader>
             <CardContent>
-              <Accordion type="single" collapsible>
-                <AccordionItem value="care-tips">
-                  <AccordionTrigger>
-                    <strong>Care Tips</strong>
-                  </AccordionTrigger>
-                  <AccordionContent>{careTips}</AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="detailed-analysis">
-                  <AccordionTrigger>
-                    <strong>Detailed Analysis</strong>
-                  </AccordionTrigger>
-                  <AccordionContent>{detailedAnalysis}</AccordionContent>
-                </AccordionItem>
-              </Accordion>
+              <section className="mb-4">
+                <h3 className="text-xl font-semibold mb-2">Care Tips</h3>
+                <p>{careTips}</p>
+              </section>
+
+              <section className="mb-4">
+                <h3 className="text-xl font-semibold mb-2">Detailed Analysis</h3>
+                <p>{detailedAnalysis}</p>
+              </section>
             </CardContent>
           </Card>
         </div>

@@ -30,6 +30,7 @@ export default function DiseaseDetectionPage() {
   const [causes, setCauses] = useState('');
   const [treatments, setTreatments] = useState('');
   const [prevention, setPrevention] = useState('');
+  const [fertilizerRecommendation, setFertilizerRecommendation] = useState(''); // New state for fertilizer recommendation
   const [loading, setLoading] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -115,6 +116,7 @@ export default function DiseaseDetectionPage() {
       setCauses(result.causes || '');
       setTreatments(result.treatments || '');
       setPrevention(result.prevention || '');
+      setFertilizerRecommendation(result.fertilizerRecommendation || ''); // Retrieve fertilizer recommendation
       toast({
         title: "Disease Detection Result",
         description: result.diseaseDetected ? `Disease detected: ${result.diseaseName}` : "No disease detected.",
@@ -212,110 +214,100 @@ export default function DiseaseDetectionPage() {
               <CardTitle>Plant Analysis</CardTitle>
             </CardHeader>
             <CardContent>
-              <Accordion type="single" collapsible>
-                {detectedPlant && (
-                  <AccordionItem value="detected-plant">
-                    <AccordionTrigger>
-                      <strong>Detected Plant:</strong>
-                    </AccordionTrigger>
-                    <AccordionContent>{detectedPlant}</AccordionContent>
-                  </AccordionItem>
-                )}
-                {quickSummary && (
-                  <AccordionItem value="quick-summary">
-                    <AccordionTrigger>
-                      <strong>Quick Summary:</strong>
-                    </AccordionTrigger>
-                    <AccordionContent>{quickSummary}</AccordionContent>
-                  </AccordionItem>
-                )}
-                {plantCondition && (
-                  <AccordionItem value="plant-condition">
-                    <AccordionTrigger>
-                      <strong>Plant Condition:</strong>
-                    </AccordionTrigger>
-                    <AccordionContent>{plantCondition}</AccordionContent>
-                  </AccordionItem>
-                )}
-                {likelyCauses && (
-                  <AccordionItem value="likely-causes">
-                    <AccordionTrigger>
-                      <strong>Likely Causes:</strong>
-                    </AccordionTrigger>
-                    <AccordionContent>{likelyCauses}</AccordionContent>
-                  </AccordionItem>
-                )}
-                {recommendedActions && (
-                  <AccordionItem value="recommended-actions">
-                    <AccordionTrigger>
-                      <strong>Recommended Actions:</strong>
-                    </AccordionTrigger>
-                    <AccordionContent>{recommendedActions}</AccordionContent>
-                  </AccordionItem>
-                )}
-                {careInstructions && (
-                  <AccordionItem value="care-instructions">
-                    <AccordionTrigger>
-                      <strong>Care Instructions:</strong>
-                    </AccordionTrigger>
-                    <AccordionContent>{careInstructions}</AccordionContent>
-                  </AccordionItem>
-                )}
-                {preventionGuide && (
-                  <AccordionItem value="prevention-guide">
-                    <AccordionTrigger>
-                      <strong>Prevention Guide:</strong>
-                    </AccordionTrigger>
-                    <AccordionContent>{preventionGuide}</AccordionContent>
-                  </AccordionItem>
-                )}
-                {additionalTips && (
-                  <AccordionItem value="additional-tips">
-                    <AccordionTrigger>
-                      <strong>Additional Tips:</strong>
-                    </AccordionTrigger>
-                    <AccordionContent>{additionalTips}</AccordionContent>
-                  </AccordionItem>
-                )}
-                {ecosystemImpact && (
-                  <AccordionItem value="ecosystem-impact">
-                    <AccordionTrigger>
-                      <strong>Ecosystem Impact:</strong>
-                    </AccordionTrigger>
-                    <AccordionContent>{ecosystemImpact}</AccordionContent>
-                  </AccordionItem>
-                )}
-                {basicDiseaseInformation && (
-                  <AccordionItem value="basic-disease-information">
-                    <AccordionTrigger>
-                      <strong>Basic Disease Information:</strong>
-                    </AccordionTrigger>
-                    <AccordionContent>{basicDiseaseInformation}</AccordionContent>
-                  </AccordionItem>
-                )}
-                {detailedCareInstructions && (
-                  <AccordionItem value="detailed-care-instructions">
-                    <AccordionTrigger>
-                      <strong>Detailed Care Instructions:</strong>
-                    </AccordionTrigger>
-                    <AccordionContent>{detailedCareInstructions}</AccordionContent>
-                  </AccordionItem>
-                )}
-                {diseaseName && (
-                  <AccordionItem value="disease-details">
-                    <AccordionTrigger>
-                      <strong>Disease Details:</strong>
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      {diseaseName && <p><strong>Disease Name:</strong> {diseaseName}</p>}
-                      {symptoms && <p><strong>Symptoms:</strong> {symptoms}</p>}
-                      {causes && <p><strong>Causes:</strong> {causes}</p>}
-                      {treatments && <p><strong>Treatments:</strong> {treatments}</p>}
-                      {prevention && <p><strong>Prevention:</strong> {prevention}</p>}
-                    </AccordionContent>
-                  </AccordionItem>
-                )}
-              </Accordion>
+              {detectedPlant && (
+                <section className="mb-4">
+                  <h3 className="text-xl font-semibold mb-2">Detected Plant</h3>
+                  <p>{detectedPlant}</p>
+                </section>
+              )}
+
+              {quickSummary && (
+                <section className="mb-4">
+                  <h3 className="text-xl font-semibold mb-2">Quick Summary</h3>
+                  <p>{quickSummary}</p>
+                </section>
+              )}
+
+              {plantCondition && (
+                <section className="mb-4">
+                  <h3 className="text-xl font-semibold mb-2">Plant Condition</h3>
+                  <p>{plantCondition}</p>
+                </section>
+              )}
+
+              {likelyCauses && (
+                <section className="mb-4">
+                  <h3 className="text-xl font-semibold mb-2">Likely Causes</h3>
+                  <p>{likelyCauses}</p>
+                </section>
+              )}
+
+              {recommendedActions && (
+                <section className="mb-4">
+                  <h3 className="text-xl font-semibold mb-2">Recommended Actions</h3>
+                  <p>{recommendedActions}</p>
+                </section>
+              )}
+
+              {careInstructions && (
+                <section className="mb-4">
+                  <h3 className="text-xl font-semibold mb-2">Care Instructions</h3>
+                  <p>{careInstructions}</p>
+                </section>
+              )}
+
+              {preventionGuide && (
+                <section className="mb-4">
+                  <h3 className="text-xl font-semibold mb-2">Prevention Guide</h3>
+                  <p>{preventionGuide}</p>
+                </section>
+              )}
+
+              {additionalTips && (
+                <section className="mb-4">
+                  <h3 className="text-xl font-semibold mb-2">Additional Tips</h3>
+                  <p>{additionalTips}</p>
+                </section>
+              )}
+
+              {ecosystemImpact && (
+                <section className="mb-4">
+                  <h3 className="text-xl font-semibold mb-2">Ecosystem Impact</h3>
+                  <p>{ecosystemImpact}</p>
+                </section>
+              )}
+
+              {basicDiseaseInformation && (
+                <section className="mb-4">
+                  <h3 className="text-xl font-semibold mb-2">Basic Disease Information</h3>
+                  <p>{basicDiseaseInformation}</p>
+                </section>
+              )}
+
+              {detailedCareInstructions && (
+                <section className="mb-4">
+                  <h3 className="text-xl font-semibold mb-2">Detailed Care Instructions</h3>
+                  <p>{detailedCareInstructions}</p>
+                </section>
+              )}
+
+              {diseaseName && (
+                <section className="mb-4">
+                  <h3 className="text-xl font-semibold mb-2">Disease Details</h3>
+                  {diseaseName && <p><strong>Disease Name:</strong> {diseaseName}</p>}
+                  {symptoms && <p><strong>Symptoms:</strong> {symptoms}</p>}
+                  {causes && <p><strong>Causes:</strong> {causes}</p>}
+                  {treatments && <p><strong>Treatments:</strong> {treatments}</p>}
+                  {prevention && <p><strong>Prevention:</strong> {prevention}</p>}
+                </section>
+              )}
+
+              {fertilizerRecommendation && (
+                <section className="mb-4">
+                  <h3 className="text-xl font-semibold mb-2">Fertilizer Recommendation</h3>
+                  <p>{fertilizerRecommendation}</p>
+                </section>
+              )}
             </CardContent>
           </Card>
         </div>
