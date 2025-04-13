@@ -11,6 +11,8 @@ import { detectPlantDisease } from "@/ai/flows/detect-plant-disease";
 import { useToast } from "@/hooks/use-toast";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Icons } from '@/components/icons';
+import { useRouter } from 'next/navigation';
 
 export default function DiseaseDetectionPage() {
   const [photoUrl, setPhotoUrl] = useState('');
@@ -37,6 +39,8 @@ export default function DiseaseDetectionPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [useCamera, setUseCamera] = useState(false); // State to toggle camera view
   const { toast } = useToast();
+  const router = useRouter();
+
 
   useEffect(() => {
     const getCameraPermission = async () => {
@@ -146,6 +150,50 @@ export default function DiseaseDetectionPage() {
           <CardDescription>You can provide a URL, use your camera, or select from gallery.</CardDescription>
         </CardHeader>
         <CardContent className="p-4 space-y-4">
+           {/* Image Upload Preview */}
+           {!photoUrl && (
+            <div className="relative w-full h-64 rounded-md overflow-hidden flex items-center justify-center bg-secondary">
+              {Icons.image ? (
+                  <Icons.image className="h-12 w-12 text-muted-foreground" />
+                ) : (
+                  <p className="text-sm text-muted-foreground">Image Icon Missing</p>
+                )}
+              <p className="text-sm text-muted-foreground">Upload a photo to identify</p>
+            </div>
+          )}
+
+          {photoUrl && (
+            <div className="relative w-full h-64 rounded-md overflow-hidden">
+              <Image
+                src={photoUrl}
+                alt="Plant Image"
+                layout="fill"
+                objectFit="contain"
+              />
+            </div>
+          )}
+          <div className="flex justify-around space-x-2">
+                <Button type="button" variant="secondary" onClick={() => setUseCamera(!useCamera)}>
+                    {useCamera ? "Close Camera" : "Take Photo"}
+                    <Camera className="ml-2 h-4 w-4" />
+                </Button>
+
+                <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    id="image-upload"
+                />
+                <label htmlFor="image-upload">
+                    <Button type="button" variant="outline">
+                        Choose from Gallery
+                         <Icons.imagePlus className="ml-2 h-4 w-4" />
+                    </Button>
+                </label>
+            </div>
+
+          {/* Image Upload Preview */}
           <Input
             type="url"
             placeholder="Enter image URL"
@@ -345,6 +393,24 @@ export default function DiseaseDetectionPage() {
           <p>No disease detected in the provided image.</p>
         </div>
       )}
+         {/* Bottom Navigation */}
+         <footer className="fixed bottom-0 left-0 w-full bg-secondary py-2 border-t border-gray-200">
+            <nav className="flex justify-around">
+                <Button variant="ghost" className="flex flex-col items-center justify-center" onClick={() => router.push('/')}>
+                    <Icons.home className="h-5 w-5 mb-1" />
+                    <span className="text-xs">Home</span>
+                </Button>
+                <Button variant="ghost" className="flex flex-col items-center justify-center" onClick={() => router.push('/assistant')}>
+                    <Icons.help className="h-5 w-5 mb-1" />
+                    <span className="text-xs">Green AI</span>
+                </Button>
+                <Button variant="ghost" className="flex flex-col items-center justify-center" onClick={() => router.push('/garden')}>
+                    <Icons.user className="h-5 w-5 mb-1" />
+                    <span className="text-xs">Profile</span>
+                </Button>
+            </nav>
+        </footer>
     </div>
   );
 }
+"
