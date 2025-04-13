@@ -13,6 +13,17 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 export default function DiseaseDetectionPage() {
   const [photoUrl, setPhotoUrl] = useState('');
+  const [detectedPlant, setDetectedPlant] = useState('');
+  const [quickSummary, setQuickSummary] = useState('');
+  const [plantCondition, setPlantCondition] = useState('');
+  const [likelyCauses, setLikelyCauses] = useState('');
+  const [recommendedActions, setRecommendedActions] = useState('');
+  const [careInstructions, setCareInstructions] = useState('');
+  const [preventionGuide, setPreventionGuide] = useState('');
+  const [additionalTips, setAdditionalTips] = useState('');
+  const [ecosystemImpact, setEcosystemImpact] = useState('');
+  const [basicDiseaseInformation, setBasicDiseaseInformation] = useState('');
+  const [detailedCareInstructions, setDetailedCareInstructions] = useState('');
   const [diseaseDetected, setDiseaseDetected] = useState(false);
   const [diseaseName, setDiseaseName] = useState('');
   const [symptoms, setSymptoms] = useState('');
@@ -87,6 +98,17 @@ export default function DiseaseDetectionPage() {
     setLoading(true);
     try {
       const result = await detectPlantDisease({ photoUrl });
+      setDetectedPlant(result.detectedPlant || '');
+      setQuickSummary(result.quickSummary || '');
+      setPlantCondition(result.plantCondition || '');
+      setLikelyCauses(result.likelyCauses || '');
+      setRecommendedActions(result.recommendedActions || '');
+      setCareInstructions(result.careInstructions || '');
+      setPreventionGuide(result.preventionGuide || '');
+      setAdditionalTips(result.additionalTips || '');
+      setEcosystemImpact(result.ecosystemImpact || '');
+      setBasicDiseaseInformation(result.basicDiseaseInformation || '');
+      setDetailedCareInstructions(result.detailedCareInstructions || '');
       setDiseaseDetected(result.diseaseDetected);
       setDiseaseName(result.diseaseName || '');
       setSymptoms(result.symptoms || '');
@@ -142,7 +164,7 @@ export default function DiseaseDetectionPage() {
           />
 
           <Button type="button" variant="secondary" onClick={() => setUseCamera(!useCamera)}>
-              {useCamera ? "Close Camera" : "Open Camera"}
+            {useCamera ? "Close Camera" : "Open Camera"}
           </Button>
 
           {useCamera && hasCameraPermission && (
@@ -183,20 +205,33 @@ export default function DiseaseDetectionPage() {
         </CardContent>
       </Card>
 
-      {diseaseDetected && diseaseName && (
+      {diseaseDetected && (
         <div className="mt-8 max-w-2xl mx-auto">
           <Accordion type="single" collapsible>
-            <AccordionItem value="disease-info">
+            <AccordionItem value="plant-analysis">
               <AccordionTrigger>
                 <h2 className="text-2xl font-semibold">
-                  {diseaseName}
+                  Plant Analysis
                 </h2>
               </AccordionTrigger>
               <AccordionContent>
-                <p><strong>Symptoms:</strong> {symptoms}</p>
-                <p><strong>Causes:</strong> {causes}</p>
-                <p><strong>Treatments:</strong> {treatments}</p>
-                <p><strong>Prevention:</strong> {prevention}</p>
+                {detectedPlant && <p><strong>Detected Plant:</strong> {detectedPlant}</p>}
+                {quickSummary && <p><strong>Quick Summary:</strong> {quickSummary}</p>}
+                {plantCondition && <p><strong>Plant Condition:</strong> {plantCondition}</p>}
+                {likelyCauses && <p><strong>Likely Causes:</strong> {likelyCauses}</p>}
+                {recommendedActions && <p><strong>Recommended Actions:</strong> {recommendedActions}</p>}
+                {careInstructions && <p><strong>Care Instructions:</strong> {careInstructions}</p>}
+                {preventionGuide && <p><strong>Prevention Guide:</strong> {preventionGuide}</p>}
+                {additionalTips && <p><strong>Additional Tips:</strong> {additionalTips}</p>}
+                {ecosystemImpact && <p><strong>Ecosystem Impact:</strong> {ecosystemImpact}</p>}
+                {basicDiseaseInformation && <p><strong>Basic Disease Information:</strong> {basicDiseaseInformation}</p>}
+                {detailedCareInstructions && <p><strong>Detailed Care Instructions:</strong> {detailedCareInstructions}</p>}
+                {diseaseName && <h3 className="text-xl font-semibold mt-4">Disease Details</h3>}
+                {diseaseName && <p><strong>Disease Name:</strong> {diseaseName}</p>}
+                {symptoms && <p><strong>Symptoms:</strong> {symptoms}</p>}
+                {causes && <p><strong>Causes:</strong> {causes}</p>}
+                {treatments && <p><strong>Treatments:</strong> {treatments}</p>}
+                {prevention && <p><strong>Prevention:</strong> {prevention}</p>}
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -211,4 +246,3 @@ export default function DiseaseDetectionPage() {
     </div>
   );
 }
-
