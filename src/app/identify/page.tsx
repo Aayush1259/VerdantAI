@@ -14,6 +14,7 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { useRouter } from 'next/navigation';
 import { Home, Shield } from 'lucide-react';
 import { Icons } from '@/components/icons';
+import React from 'react';
 
 const sampleImages = [
   'https://picsum.photos/200/300',
@@ -180,12 +181,14 @@ export default function IdentifyPlantPage() {
                     className="hidden"
                     id="image-upload"
                 />
-                <label htmlFor="image-upload">
-                    <Button type="button" variant="outline">
-                        Choose from Gallery
-                        <ImagePlus className="ml-2 h-4 w-4" />
-                    </Button>
-                </label>
+                <React.Fragment>
+                  <label htmlFor="image-upload">
+                      <Button type="button" variant="outline">
+                          Choose from Gallery
+                          <ImagePlus className="ml-2 h-4 w-4" />
+                      </Button>
+                  </label>
+                </React.Fragment>
             </div>
 
 
