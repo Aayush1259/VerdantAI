@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import { Leaf } from 'lucide-react';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -17,6 +18,13 @@ export default function IdentifyPlantPage() {
   const [scientificName, setScientificName] = useState('');
   const [careTips, setCareTips] = useState('');
   const [detailedAnalysis, setDetailedAnalysis] = useState('');
+  const [growthHabit, setGrowthHabit] = useState('');
+  const [lifespan, setLifespan] = useState('');
+  const [lightRequirements, setLightRequirements] = useState('');
+  const [waterRequirements, setWaterRequirements] = useState('');
+  const [soilPreferences, setSoilPreferences] = useState('');
+  const [suitableLocations, setSuitableLocations] = useState('');
+  const [potentialProblems, setPotentialProblems] = useState('');
   const [loading, setLoading] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -88,6 +96,13 @@ export default function IdentifyPlantPage() {
       setScientificName(result.scientificName);
       setCareTips(result.careTips);
       setDetailedAnalysis(result.detailedAnalysis);
+      setGrowthHabit(result.growthHabit || '');
+      setLifespan(result.lifespan || '');
+      setLightRequirements(result.lightRequirements || '');
+      setWaterRequirements(result.waterRequirements || '');
+      setSoilPreferences(result.soilPreferences || '');
+      setSuitableLocations(result.suitableLocations || '');
+      setPotentialProblems(result.potentialProblems || '');
       toast({
         title: "Plant Identified!",
         description: `Successfully identified the plant as ${result.commonName}.`,
@@ -182,7 +197,10 @@ export default function IdentifyPlantPage() {
         <div className="mt-8 max-w-2xl mx-auto">
           <Card>
             <CardHeader>
-              <CardTitle>{commonName} ({scientificName})</CardTitle>
+              <CardTitle className="flex items-center">
+                <Leaf className="mr-2 h-5 w-5 text-green-500" />
+                {commonName} ({scientificName})
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <section className="mb-4">
@@ -194,6 +212,55 @@ export default function IdentifyPlantPage() {
                 <h3 className="text-xl font-semibold mb-2">Detailed Analysis</h3>
                 <p>{detailedAnalysis}</p>
               </section>
+
+               {growthHabit && (
+                <section className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">Growth Habit</h3>
+                  <p>{growthHabit}</p>
+                </section>
+              )}
+
+              {lifespan && (
+                <section className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">Lifespan</h3>
+                  <p>{lifespan}</p>
+                </section>
+              )}
+
+              {lightRequirements && (
+                <section className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">Light Requirements</h3>
+                  <p>{lightRequirements}</p>
+                </section>
+              )}
+
+              {waterRequirements && (
+                <section className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">Water Requirements</h3>
+                  <p>{waterRequirements}</p>
+                </section>
+              )}
+
+              {soilPreferences && (
+                <section className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">Soil Preferences</h3>
+                  <p>{soilPreferences}</p>
+                </section>
+              )}
+
+              {suitableLocations && (
+                <section className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">Suitable Locations</h3>
+                  <p>{suitableLocations}</p>
+                </section>
+              )}
+
+              {potentialProblems && (
+                <section className="mb-4">
+                  <h3 className="text-lg font-semibold mb-2">Potential Problems</h3>
+                  <p>{potentialProblems}</p>
+                </section>
+              )}
             </CardContent>
           </Card>
         </div>

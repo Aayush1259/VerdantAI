@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import { Leaf, Shield } from 'lucide-react';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -216,14 +217,20 @@ export default function DiseaseDetectionPage() {
             <CardContent>
               {detectedPlant && (
                 <section className="mb-4">
-                  <h3 className="text-xl font-semibold mb-2">Detected Plant</h3>
+                  <h3 className="text-xl font-semibold mb-2 flex items-center">
+                    <Leaf className="mr-2 h-5 w-5 text-green-500" />
+                    Detected Plant
+                  </h3>
                   <p>{detectedPlant}</p>
                 </section>
               )}
 
               {quickSummary && (
                 <section className="mb-4">
-                  <h3 className="text-xl font-semibold mb-2">Quick Summary</h3>
+                  <h3 className="text-xl font-semibold mb-2 flex items-center">
+                    <Shield className="mr-2 h-5 w-5 text-yellow-500" />
+                    Quick Summary
+                  </h3>
                   <p>{quickSummary}</p>
                 </section>
               )}
