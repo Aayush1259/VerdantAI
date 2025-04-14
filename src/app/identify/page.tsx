@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { Leaf, Camera } from 'lucide-react';
+import { Leaf, Camera, ArrowLeft } from 'lucide-react';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -137,7 +137,7 @@ export default function IdentifyPlantPage() {
     <div className="container mx-auto py-10">
       {/* Back Navigation */}
       <Button variant="ghost" onClick={() => router.back()} className="mb-4">
-          <Icons.arrowLeft className="mr-2 h-4 w-4" />
+          <ArrowLeft className="mr-2 h-4 w-4" />
           Plant Identification
       </Button>
       <section className="text-center mb-8">
@@ -166,6 +166,8 @@ export default function IdentifyPlantPage() {
                 alt="Plant Image"
                 layout="fill"
                 objectFit="contain"
+                width={500}
+                height={500}
               />
             </div>
           )}
@@ -224,6 +226,7 @@ export default function IdentifyPlantPage() {
                             height={80}
                             className="rounded-md cursor-pointer"
                             onClick={() => handleSampleImageClick(imageUrl)}
+                            priority={true}
                         />
                     ))}
                 </div>
