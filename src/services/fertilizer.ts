@@ -25,7 +25,7 @@ export interface Fertilizer {
  */
 export async function getFertilizer(fertilizerName: string): Promise<Fertilizer> {
   // TODO: Implement this by calling an API.
-
+  console.log(`retrieving fertilizer data for ${fertilizerName}`);
   return {
     name: 'Example Fertilizer',
     description: 'A general-purpose fertilizer for plants.',

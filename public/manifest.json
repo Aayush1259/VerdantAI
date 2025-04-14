@@ -4,7 +4,7 @@
   "description": "Your AI-powered companion for plant care.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F2FCE2",
+  "background_color": "#FFFFFF",
   "theme_color": "#0E8F6E",
   "icons": [
     {

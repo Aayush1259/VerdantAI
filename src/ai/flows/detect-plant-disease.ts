@@ -43,18 +43,6 @@ export async function detectPlantDisease(input: DetectPlantDiseaseInput): Promis
   return detectPlantDiseaseFlow(input);
 }
 
-const shouldIncludeDiseaseInfo = ai.defineTool({
-  name: 'shouldIncludeDiseaseInfo',
-  description: 'Determine if disease information should be displayed to the user.',
-  inputSchema: z.object({
-    diseaseDetected: z.boolean().describe('Whether or not a disease has been detected.'),
-  }),
-  outputSchema: z.boolean().describe('Whether or not the information should be displayed.'),
-},
-async input => {
-  return input.diseaseDetected;
-});
-
 const getFertilizerInfo = ai.defineTool({
   name: 'getFertilizerInfo',
   description: 'Retrieves information about a specific fertilizer.',
@@ -128,7 +116,7 @@ const prompt = ai.definePrompt({
   output: {
     schema: DetectPlantDiseaseOutputSchema,
   },
-  tools: [shouldIncludeDiseaseInfo, getFertilizerInfo],
+  tools: [getFertilizerInfo],
   prompt: `You are an expert plant pathologist. Analyze the image of the plant and determine if it has any diseases.
 
   Based on the image, provide a detailed analysis of the plant's condition, following these guidelines:
