@@ -1,4 +1,3 @@
-// src/ai/flows/identify-plant.ts
 'use server';
 
 /**
@@ -21,14 +20,6 @@ const IdentifyPlantOutputSchema = z.object({
   commonName: z.string().describe('The common name of the identified plant.'),
   scientificName: z.string().describe('The scientific name of the identified plant.'),
   careTips: z.string().describe('Tips on how to care for the identified plant.'),
-  detailedAnalysis: z.string().describe('Detailed analysis of the identified plant, including growth characteristics, environmental needs, and potential issues.'),
-  growthHabit: z.string().optional().describe('The growth habit of the plant (e.g., tree, shrub, vine).'),
-  lifespan: z.string().optional().describe('The typical lifespan of the plant (annual, biennial, perennial).'),
-  lightRequirements: z.string().optional().describe('The amount of sunlight the plant needs.'),
-  waterRequirements: z.string().optional().describe('How often the plant needs to be watered.'),
-  soilPreferences: z.string().optional().describe('The type of soil the plant prefers.'),
-  suitableLocations: z.string().optional().describe('Where the plant grows best (e.g., gardens, woodlands).'),
-  potentialProblems: z.string().optional().describe('Potential pests, diseases, or environmental issues.'),
 });
 export type IdentifyPlantOutput = z.infer<typeof IdentifyPlantOutputSchema>;
 
@@ -48,16 +39,7 @@ const prompt = ai.definePrompt({
   },
   prompt: `You are an expert botanist. Identify the plant species in the image provided.
 
-  Provide the common name, scientific name, and detailed care tips for the plant. Also, provide a detailed analysis of the identified plant, including growth characteristics, environmental needs, and potential issues.
-
-  In your analysis, include the following information:
-  - Growth Habit: (e.g., tree, shrub, vine)
-  - Lifespan: (annual, biennial, perennial)
-  - Light Requirements: (full sun, partial shade, shade)
-  - Water Requirements: (dry, moderate, moist)
-  - Soil Preferences: (sandy, loamy, clay)
-  - Suitable Locations: (gardens, woodlands, etc.)
-  - Potential Problems: (pests, diseases, environmental issues)
+  Provide the common name, scientific name, and care tips for the plant.
 
   Photo: {{media url=photoUrl}}
   `,

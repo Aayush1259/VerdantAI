@@ -54,11 +54,8 @@ const prompt = ai.definePrompt({
   },
   tools: [fertilizerTool],
   prompt: `You are a helpful AI assistant providing personalized advice for plant care.
-
   The user will ask a question about plant care, and you should provide helpful and informative advice.
-
   You can use the getFertilizerInfo tool if the user asks about a specific fertilizer.
-
   Question: {{{question}}}`,
 });
 
