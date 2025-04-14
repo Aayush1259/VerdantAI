@@ -135,16 +135,17 @@ export default function IdentifyPlantPage() {
 
   return (
     <div className="container mx-auto py-10">
+      {/* Back Navigation */}
+      <Button variant="ghost" onClick={() => router.back()} className="mb-4">
+          <Icons.arrowLeft className="mr-2 h-4 w-4" />
+          Plant Identification
+      </Button>
       <section className="text-center mb-8">
-        <h1 className="text-3xl font-semibold mb-2">Plant Identification</h1>
+        <h1 className="text-3xl font-semibold mb-2"></h1>
         <p className="text-muted-foreground">Upload an image to identify the plant species.</p>
       </section>
 
       <Card className="w-full max-w-lg mx-auto">
-        <CardHeader>
-          <CardTitle>Upload Plant Image</CardTitle>
-          <CardDescription>Please provide a URL, use your camera, or select from gallery.</CardDescription>
-        </CardHeader>
         <CardContent className="p-4 space-y-4">
           {/* Image Upload Preview */}
           {!photoUrl && (
