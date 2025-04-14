@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Camera, Home, Leaf, Shield } from 'lucide-react';
+import { Camera, Home, Leaf, Shield, Bell } from 'lucide-react';
 
 import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
@@ -26,33 +26,71 @@ const features = [
     href: '/disease',
     icon: Shield,
   },
+    {
+        title: 'Green Community',
+        description: 'Connect with other plant enthusiasts.',
+        href: '/community',
+        icon: Icons.messageSquare, // Using message square icon
+    },
   {
     title: 'My Garden',
     description: 'Track care information and set reminders for your plants.',
     href: '/garden',
     icon: Home,
   },
-  {
-    title: 'GreenAI Assistant',
-    description: 'Get personalized advice and suggestions for plant care.',
-    href: '/assistant',
-    icon: Icons.help,
-  },
+];
+
+const images = [
+    "https://picsum.photos/id/237/400/300",
+    "https://picsum.photos/id/238/400/300",
+    "https://picsum.photos/id/239/400/300",
+    "https://picsum.photos/id/240/400/300",
+    "https://picsum.photos/id/241/400/300",
 ];
 
 export default function HomePage() {
   const { data: session } = useSession()
   const router = useRouter();
+    const [currentImage, setCurrentImage] = useState(0);
+
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            setCurrentImage((prevImage) => (prevImage + 1) % images.length);
+        }, 3000); // Change image every 3 seconds
+
+        return () => clearInterval(intervalId); // Clear interval on unmount
+    }, []);
 
   return (
     <div className="container mx-auto py-6 px-4 max-w-md">
       {/* Header */}
       <header className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-semibold">VerdantAI</h1>
+            <Button variant="ghost" size="icon">
+                <Bell className="h-5 w-5" />
+                <span className="sr-only">Notifications</span>
+            </Button>
       </header>
+
+      {/* Image Slider */}
+      <section className="relative h-48 mb-4 rounded-lg overflow-hidden">
+            <Image
+                src={images[currentImage]}
+                alt="Plant Image"
+                layout="fill"
+                objectFit="cover"
+                className="transition-opacity duration-500 ease-in-out"
+            />
+            <div className="absolute inset-0 bg-black opacity-40"></div>
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+                <h2 className="text-2xl font-semibold">Welcome to Plant Care</h2>
+                <p className="text-sm text-center">Your smart companion for plant identification and care.</p>
+            </div>
+        </section>
 
       {/* Features */}
       <section className="mb-8">
+        <h2 className="text-lg font-semibold mb-2">Features</h2>
         <div className="grid grid-cols-2 gap-4">
           {features.map((feature) => (
             <Link key={feature.title} href={feature.href}>
