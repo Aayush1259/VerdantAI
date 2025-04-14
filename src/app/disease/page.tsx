@@ -180,6 +180,8 @@ export default function DiseaseDetectionPage() {
                 alt="Plant Image"
                 layout="fill"
                 objectFit="contain"
+                width={500}
+                height={500}
               />
             </div>
           )}
