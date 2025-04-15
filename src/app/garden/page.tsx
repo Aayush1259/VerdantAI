@@ -50,9 +50,19 @@ export default function MyGardenPage() {
 
   useEffect(() => {
     if (app) {
-        setAuth(getAuth(app));
-        setDb(getFirestore(app));
-        setStorage(getStorage(app));
+        try {
+            setAuth(getAuth(app));
+            setDb(getFirestore(app));
+            setStorage(getStorage(app));
+        } catch (error: any) {
+            console.error("Firebase initialization error:", error);
+            toast({
+              variant: 'destructive',
+              title: 'Firebase Error',
+              description: error.message || 'Failed to initialize Firebase.',
+            });
+            return; // Exit the useEffect if Firebase fails to initialize
+          }
     }
   }, []);
 
