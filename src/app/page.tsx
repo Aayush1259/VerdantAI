@@ -48,7 +48,7 @@ const images = [
     "https://picsum.photos/id/241/400/300",
 ];
 
-export default function HomePage() {
+export default function Home() {
   const { data: session } = useSession()
   const router = useRouter();
     const [currentImage, setCurrentImage] = useState(0);
@@ -121,6 +121,10 @@ export default function HomePage() {
               <span className="text-xs">Home</span>
             </Button>
             
+            <Button variant="ghost" className="flex flex-col items-center justify-center" onClick={() => router.push('/assistant')}>
+                <Icons.help className="h-5 w-5 mb-1" />
+                <span className="text-xs">Green AI</span>
+            </Button>
 
           {session ? (
               <DropdownMenu>
