@@ -27,7 +27,7 @@ const features = [
     icon: Shield, // Changed to Shield icon
   },
     {
-        title: 'Green Community',
+        title: 'Community',
         description: 'Connect with other plant enthusiasts.',
         href: '/community',
         icon: MessageSquare, // Using message square icon
@@ -37,12 +37,6 @@ const features = [
     description: 'Track care information and set reminders for your plants.',
     href: '/garden',
     icon: User, // Changed to User icon
-  },
-  {
-    title: 'Green AI Assistant',
-    description: 'Get personalized plant care advice from our AI assistant.',
-    href: '/assistant',
-    icon: HelpCircle, // Changed to HelpCircle icon
   },
 ];
 
@@ -83,8 +77,9 @@ export default function HomePage() {
             <Image
                 src={images[currentImage]}
                 alt="Plant Image"
-                layout="fill"
-                objectFit="cover"
+                fill={true}
+                sizes="100%"
+                style={{ objectFit: 'cover' }}
                 className="transition-opacity duration-500 ease-in-out"
             />
             <div className="absolute inset-0 bg-black opacity-40"></div>
@@ -125,10 +120,7 @@ export default function HomePage() {
               <Home className="h-5 w-5 mb-1" />
               <span className="text-xs">Home</span>
             </Button>
-            <Button variant="ghost" className="flex flex-col items-center justify-center" onClick={() => router.push('/assistant')}>
-              <HelpCircle className="h-5 w-5 mb-1" />
-              <span className="text-xs">Green AI</span>
-            </Button>
+            
 
           {session ? (
               <DropdownMenu>
