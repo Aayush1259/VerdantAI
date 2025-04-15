@@ -40,13 +40,31 @@ export default function MyGardenPage() {
   const [loading, setLoading] = useState(false);
   const {toast} = useToast();
 
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const storage = getStorage(app);
+  const [auth, setAuth] = useState(null);
+  const [db, setDb] = useState(null);
+  const [storage, setStorage] = useState(null);
+
+  useEffect(() => {
+    if (app) {
+      try {
+        setAuth(getAuth(app));
+        setDb(getFirestore(app));
+        setStorage(getStorage(app));
+      } catch (error: any) {
+        console.error("Firebase initialization error:", error);
+        toast({
+          variant: 'destructive',
+          title: 'Firebase Error',
+          description: error.message || 'Failed to initialize Firebase.',
+        });
+        return; // Exit the useEffect if Firebase fails to initialize
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const loadPlants = async () => {
-      if (session?.user?.email) {
+      if (session?.user?.email && db) {
         setLoading(true);
         try {
           const plantsCollection = query(
@@ -69,7 +87,7 @@ export default function MyGardenPage() {
     };
 
     const loadReminders = async () => {
-      if (session?.user?.email) {
+      if (session?.user?.email && db) {
         setLoading(true);
         try {
           const remindersCollection = query(
@@ -96,6 +114,7 @@ export default function MyGardenPage() {
   }, [session, db, toast]);
 
   const addPlant = async () => {
+    if (!db || !storage || !auth) return;
     if (newPlantName.trim() === '' || newPlantSpecies.trim() === '') return;
 
     setLoading(true);
@@ -131,6 +150,7 @@ export default function MyGardenPage() {
   };
 
   const addReminder = async () => {
+    if (!db || !auth) return;
     if (newReminder.trim() !== '') {
       setLoading(true);
       try {
@@ -154,6 +174,7 @@ export default function MyGardenPage() {
   };
 
   const deletePlant = async (plantId: string) => {
+    if (!db || !auth) return;
     setLoading(true);
     try {
       const plantDoc = doc(db, 'users', session!.user!.email!, 'plants', plantId);
@@ -175,6 +196,7 @@ export default function MyGardenPage() {
   };
 
   const deleteReminder = async (reminderId: string) => {
+    if (!db || !auth) return;
     setLoading(true);
     try {
       const reminderDoc = doc(db, 'users', session!.user!.email!, 'reminders', reminderId);
