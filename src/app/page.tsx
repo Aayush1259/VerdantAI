@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Home, Leaf, Camera, Shield, MessageSquare, User, HelpCircle } from 'lucide-react';
+import { Home, Leaf, Shield, MessageSquare, User, HelpCircle } from 'lucide-react';
 
 import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
@@ -48,7 +48,7 @@ const images = [
     "https://picsum.photos/id/241/400/300",
 ];
 
-export default function Home() {
+export default function HomePage() {
   const { data: session } = useSession()
   const router = useRouter();
     const [currentImage, setCurrentImage] = useState(0);
