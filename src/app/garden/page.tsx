@@ -11,11 +11,27 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
-import {getFirestore, collection, addDoc, getDocs, deleteDoc, doc} from 'firebase/firestore';
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  doc,
+  query,
+  where,
+  orderBy,
+} from 'firebase/firestore';
+import {getStorage, ref, uploadBytes, getDownloadURL} from 'firebase/storage';
 import {app} from '@/firebase';
+import Image from 'next/image';
 
 export default function MyGardenPage() {
   const {data: session, status} = useSession();
+  const [plants, setPlants] = useState<any[]>([]);
+  const [newPlantName, setNewPlantName] = useState('');
+  const [newPlantSpecies, setNewPlantSpecies] = useState('');
+  const [newPlantImage, setNewPlantImage] = useState<File | null>(null);
   const [reminders, setReminders] = useState<any[]>([]);
   const [newReminder, setNewReminder] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
@@ -26,13 +42,40 @@ export default function MyGardenPage() {
 
   const auth = getAuth(app);
   const db = getFirestore(app);
+  const storage = getStorage(app);
 
   useEffect(() => {
+    const loadPlants = async () => {
+      if (session?.user?.email) {
+        setLoading(true);
+        try {
+          const plantsCollection = query(
+            collection(db, 'users', session.user.email, 'plants'),
+            orderBy('name')
+          );
+          const plantSnapshot = await getDocs(plantsCollection);
+          const plantList = plantSnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
+          setPlants(plantList);
+        } catch (error: any) {
+          toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: error.message || 'Failed to load plants.',
+          });
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
     const loadReminders = async () => {
       if (session?.user?.email) {
         setLoading(true);
         try {
-          const remindersCollection = collection(db, 'users', session.user.email, 'reminders');
+          const remindersCollection = query(
+            collection(db, 'users', session.user.email, 'reminders'),
+            orderBy('text')
+          );
           const reminderSnapshot = await getDocs(remindersCollection);
           const reminderList = reminderSnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
           setReminders(reminderList);
@@ -48,14 +91,50 @@ export default function MyGardenPage() {
       }
     };
 
+    loadPlants();
     loadReminders();
   }, [session, db, toast]);
 
+  const addPlant = async () => {
+    if (newPlantName.trim() === '' || newPlantSpecies.trim() === '') return;
+
+    setLoading(true);
+    try {
+      let imageUrl = '';
+      if (newPlantImage) {
+        const storageRef = ref(storage, `plantImages/${newPlantImage.name}`);
+        await uploadBytes(storageRef, newPlantImage);
+        imageUrl = await getDownloadURL(storageRef);
+      }
+
+      await addDoc(collection(db, 'users', session!.user!.email!, 'plants'), {
+        name: newPlantName,
+        species: newPlantSpecies,
+        imageUrl: imageUrl,
+      });
+      setNewPlantName('');
+      setNewPlantSpecies('');
+      setNewPlantImage(null);
+      toast({
+        title: 'Plant Added!',
+        description: 'Your plant has been successfully added.',
+      });
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: error.message || 'Failed to add plant.',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const addReminder = async () => {
-    if (newReminder.trim() !== '' && session?.user?.email) {
+    if (newReminder.trim() !== '') {
       setLoading(true);
       try {
-        const remindersCollection = collection(db, 'users', session.user.email, 'reminders');
+        const remindersCollection = collection(db, 'users', session!.user!.email!, 'reminders');
         await addDoc(remindersCollection, {text: newReminder});
         setNewReminder('');
         toast({
@@ -71,6 +150,27 @@ export default function MyGardenPage() {
       } finally {
         setLoading(false);
       }
+    }
+  };
+
+  const deletePlant = async (plantId: string) => {
+    setLoading(true);
+    try {
+      const plantDoc = doc(db, 'users', session!.user!.email!, 'plants', plantId);
+      await deleteDoc(plantDoc);
+      setPlants(plants.filter(plant => plant.id !== plantId));
+      toast({
+        title: 'Plant Deleted!',
+        description: 'Your plant has been successfully deleted.',
+      });
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: error.message || 'Failed to delete plant.',
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -134,6 +234,13 @@ export default function MyGardenPage() {
     }
   };
 
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setNewPlantImage(file);
+    }
+  };
+
   if (status === 'loading') {
     return <div className="container mx-auto py-10">Loading...</div>;
   }
@@ -145,6 +252,39 @@ export default function MyGardenPage() {
           <h1 className="text-3xl font-semibold mb-2">My Garden</h1>
           <p className="text-muted-foreground">Manage your plants and set reminders.</p>
         </section>
+
+        <Card className="w-full max-w-lg mx-auto mb-8">
+          <CardHeader>
+            <CardTitle>Add Plant</CardTitle>
+          </CardHeader>
+          <CardContent className="p-4">
+            <div className="flex flex-col space-y-2">
+              <Input
+                type="text"
+                placeholder="Plant Name"
+                value={newPlantName}
+                onChange={e => setNewPlantName(e.target.value)}
+                className="rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              />
+              <Input
+                type="text"
+                placeholder="Plant Species"
+                value={newPlantSpecies}
+                onChange={e => setNewPlantSpecies(e.target.value)}
+                className="rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              />
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              />
+              <Button onClick={addPlant} disabled={loading}>
+                Add Plant
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         <Card className="w-full max-w-lg mx-auto mb-8">
           <CardHeader>
@@ -163,6 +303,46 @@ export default function MyGardenPage() {
                 Add
               </Button>
             </div>
+          </CardContent>
+        </Card>
+
+        <Card className="w-full max-w-lg mx-auto">
+          <CardHeader>
+            <CardTitle>My Plants</CardTitle>
+          </CardHeader>
+          <CardContent className="p-4">
+            {plants.length > 0 ? (
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {plants.map(plant => (
+                  <li
+                    key={plant.id}
+                    className="flex flex-col items-center py-2 border rounded-md p-3 last:border-b-0"
+                  >
+                    {plant.imageUrl && (
+                      <div className="relative w-32 h-32 rounded-md overflow-hidden mb-2">
+                        <Image
+                          src={plant.imageUrl}
+                          alt={plant.name}
+                          layout="fill"
+                          objectFit="cover"
+                          width={128}
+                          height={128}
+                        />
+                      </div>
+                    )}
+                    <div className="text-center">
+                      <div className="font-semibold">{plant.name}</div>
+                      <div className="text-sm text-muted-foreground">{plant.species}</div>
+                    </div>
+                    <Button variant="outline" size="sm" onClick={() => deletePlant(plant.id)} className="mt-2">
+                      Delete
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No plants in your garden yet. Add some!</p>
+            )}
           </CardContent>
         </Card>
 
