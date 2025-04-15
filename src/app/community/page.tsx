@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {useState, useEffect} from 'react';
 import {useSession} from 'next-auth/react';
@@ -36,12 +36,23 @@ export default function CommunityPage() {
   const {toast} = useToast();
   const [commentText, setCommentText] = useState('');
 
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const storage = getStorage(app);
+  const [auth, setAuth] = useState(null);
+  const [db, setDb] = useState(null);
+  const [storage, setStorage] = useState(null);
+
+  useEffect(() => {
+    if (app) {
+      setAuth(getAuth(app));
+      setDb(getFirestore(app));
+      setStorage(getStorage(app));
+    }
+  }, []);
+
 
   useEffect(() => {
     const loadPosts = async () => {
+      if (!db) return;
+
       setLoading(true);
       try {
         const postsCollection = query(
@@ -66,6 +77,7 @@ export default function CommunityPage() {
   }, [session, db, toast]);
 
   const addPost = async () => {
+    if (!db || !storage || !auth) return;
     if (newPostText.trim() === '') return;
 
     setLoading(true);
@@ -104,6 +116,8 @@ export default function CommunityPage() {
   };
 
   const deletePost = async (postId: string) => {
+        if (!db) return;
+
     setLoading(true);
     try {
       const postDoc = doc(db, 'communityPosts', postId);
@@ -132,6 +146,8 @@ export default function CommunityPage() {
   };
 
   const likePost = async (postId: string) => {
+        if (!db) return;
+
     if (!session?.user?.email) {
       toast({
         variant: 'destructive',
@@ -161,6 +177,8 @@ export default function CommunityPage() {
   };
 
   const unlikePost = async (postId: string) => {
+        if (!db) return;
+
     if (!session?.user?.email) {
       toast({
         variant: 'destructive',
@@ -190,6 +208,8 @@ export default function CommunityPage() {
   };
 
   const addComment = async (postId: string) => {
+        if (!db) return;
+
     if (commentText.trim() === '') return;
 
     if (!session?.user?.email) {
