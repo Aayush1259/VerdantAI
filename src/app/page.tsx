@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Camera, Home, Leaf, Shield, Bell } from 'lucide-react';
+import { Home, Leaf, Camera, Shield, MessageSquare, User, HelpCircle } from 'lucide-react';
 
 import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
@@ -18,25 +18,31 @@ const features = [
     title: 'Plant Identification',
     description: 'Identify plant species from an image.',
     href: '/identify',
-    icon: Camera,
+    icon: Leaf, // Changed to Leaf icon
   },
   {
     title: 'Disease Detection',
     description: 'Detect plant diseases from an image.',
     href: '/disease',
-    icon: Shield,
+    icon: Shield, // Changed to Shield icon
   },
     {
         title: 'Green Community',
         description: 'Connect with other plant enthusiasts.',
         href: '/community',
-        icon: Icons.messageSquare, // Using message square icon
+        icon: MessageSquare, // Using message square icon
     },
   {
     title: 'My Garden',
     description: 'Track care information and set reminders for your plants.',
     href: '/garden',
-    icon: Home,
+    icon: User, // Changed to User icon
+  },
+  {
+    title: 'Green AI Assistant',
+    description: 'Get personalized plant care advice from our AI assistant.',
+    href: '/assistant',
+    icon: HelpCircle, // Changed to HelpCircle icon
   },
 ];
 
@@ -67,7 +73,7 @@ export default function HomePage() {
       <header className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-semibold">VerdantAI</h1>
             <Button variant="ghost" size="icon">
-                <Bell className="h-5 w-5" />
+                <Icons.bell className="h-5 w-5" />
                 <span className="sr-only">Notifications</span>
             </Button>
       </header>
@@ -120,7 +126,7 @@ export default function HomePage() {
               <span className="text-xs">Home</span>
             </Button>
             <Button variant="ghost" className="flex flex-col items-center justify-center" onClick={() => router.push('/assistant')}>
-              <Icons.help className="h-5 w-5 mb-1" />
+              <HelpCircle className="h-5 w-5 mb-1" />
               <span className="text-xs">Green AI</span>
             </Button>
 
@@ -141,7 +147,7 @@ export default function HomePage() {
               </DropdownMenu>
           ) : (
             <Button variant="ghost" className="flex flex-col items-center justify-center" onClick={() => router.push('/garden')}>
-              <Icons.user className="h-5 w-5 mb-1" />
+              <User className="h-5 w-5 mb-1" />
               <span className="text-xs">Profile</span>
             </Button>
           )}
@@ -150,4 +156,3 @@ export default function HomePage() {
     </div>
   );
 }
-
