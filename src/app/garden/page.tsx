@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {useState, useEffect} from 'react';
 import {useSession, signIn, signOut} from 'next-auth/react';
@@ -23,8 +23,11 @@ import {
   orderBy,
 } from 'firebase/firestore';
 import {getStorage, ref, uploadBytes, getDownloadURL} from 'firebase/storage';
-import {app} from '@/firebase';
+import { app } from '@/firebase';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { Home, Leaf, User, HelpCircle } from 'lucide-react';
+import { Icons } from '@/components/icons';
 
 export default function MyGardenPage() {
   const {data: session, status} = useSession();
@@ -39,6 +42,7 @@ export default function MyGardenPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const {toast} = useToast();
+    const router = useRouter();
 
   const [auth, setAuth] = useState(null);
   const [db, setDb] = useState(null);
@@ -46,19 +50,9 @@ export default function MyGardenPage() {
 
   useEffect(() => {
     if (app) {
-      try {
         setAuth(getAuth(app));
         setDb(getFirestore(app));
         setStorage(getStorage(app));
-      } catch (error: any) {
-        console.error("Firebase initialization error:", error);
-        toast({
-          variant: 'destructive',
-          title: 'Firebase Error',
-          description: error.message || 'Failed to initialize Firebase.',
-        });
-        return; // Exit the useEffect if Firebase fails to initialize
-      }
     }
   }, []);
 
@@ -218,6 +212,8 @@ export default function MyGardenPage() {
   };
 
   const handleSignUp = async () => {
+    if (!auth) return;
+
     setLoading(true);
     try {
       await createUserWithEmailAndPassword(auth, email, password);
@@ -238,6 +234,8 @@ export default function MyGardenPage() {
   };
 
   const handleSignIn = async () => {
+        if (!auth) return;
+
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
@@ -394,7 +392,12 @@ export default function MyGardenPage() {
         </Card>
 
         <div className="text-center mt-4">
-          <Button onClick={() => signOut()}>Sign Out</Button>
+            <Button onClick={() => {
+                signOut();
+                router.push('/'); 
+            }}>
+                Sign Out
+            </Button>
         </div>
       </div>
     );
@@ -450,6 +453,23 @@ export default function MyGardenPage() {
           </Button>
         </CardContent>
       </Card>
+         {/* Bottom Navigation */}
+         <footer className="fixed bottom-0 left-0 w-full bg-secondary py-2 border-t border-gray-200">
+            <nav className="flex justify-around">
+                <Button variant="ghost" className="flex flex-col items-center justify-center" onClick={() => router.push('/')}>
+                    <Home className="h-5 w-5 mb-1" />
+                    <span className="text-xs">Home</span>
+                </Button>
+                <Button variant="ghost" className="flex flex-col items-center justify-center" onClick={() => router.push('/assistant')}>
+                    <Icons.help className="h-5 w-5 mb-1" />
+                    <span className="text-xs">Green AI</span>
+                </Button>
+                <Button variant="ghost" className="flex flex-col items-center justify-center" onClick={() => router.push('/disease')}>
+                    <Icons.leaf className="h-5 w-5 mb-1" />
+                    <span className="text-xs">Identify</span>
+                </Button>
+            </nav>
+        </footer>
     </div>
   );
 }
