@@ -17,10 +17,15 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
 } from 'firebase/firestore';
 import {getStorage, ref, uploadBytes, getDownloadURL} from 'firebase/storage';
 import {app} from '@/firebase';
 import Image from 'next/image';
+import {getAuth} from 'firebase/auth';
+import {Heart, MessageSquare} from 'lucide-react';
 
 export default function CommunityPage() {
   const {data: session} = useSession();
@@ -29,6 +34,7 @@ export default function CommunityPage() {
   const [newPostImage, setNewPostImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const {toast} = useToast();
+  const [commentText, setCommentText] = useState('');
 
   const auth = getAuth(app);
   const db = getFirestore(app);
@@ -77,6 +83,8 @@ export default function CommunityPage() {
         userId: session?.user?.email,
         displayName: session?.user?.name,
         timestamp: serverTimestamp(),
+        likes: [], // Initialize likes array
+        comments: [], // Initialize comments array
       });
       setNewPostText('');
       setNewPostImage(null);
@@ -123,6 +131,114 @@ export default function CommunityPage() {
     }
   };
 
+  const likePost = async (postId: string) => {
+    if (!session?.user?.email) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'You must be logged in to like a post.',
+      });
+      return;
+    }
+
+    const postDoc = doc(db, 'communityPosts', postId);
+    try {
+      await updateDoc(postDoc, {
+        likes: arrayUnion(session.user.email),
+      });
+      setPosts(
+        posts.map(post =>
+          post.id === postId ? {...post, likes: [...post.likes, session.user.email]} : post
+        )
+      );
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: error.message || 'Failed to like post.',
+      });
+    }
+  };
+
+  const unlikePost = async (postId: string) => {
+    if (!session?.user?.email) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'You must be logged in to unlike a post.',
+      });
+      return;
+    }
+
+    const postDoc = doc(db, 'communityPosts', postId);
+    try {
+      await updateDoc(postDoc, {
+        likes: arrayRemove(session.user.email),
+      });
+      setPosts(
+        posts.map(post =>
+          post.id === postId ? {...post, likes: post.likes.filter((user: any) => user !== session.user.email)} : post
+        )
+      );
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: error.message || 'Failed to unlike post.',
+      });
+    }
+  };
+
+  const addComment = async (postId: string) => {
+    if (commentText.trim() === '') return;
+
+    if (!session?.user?.email) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'You must be logged in to comment.',
+      });
+      return;
+    }
+
+    const postDoc = doc(db, 'communityPosts', postId);
+    try {
+      await updateDoc(postDoc, {
+        comments: arrayUnion({
+          text: commentText,
+          userId: session.user.email,
+          displayName: session.user.name,
+          timestamp: serverTimestamp(),
+        }),
+      });
+      setPosts(
+        posts.map(post =>
+          post.id === postId
+            ? {
+                ...post,
+                comments: [
+                  ...post.comments,
+                  {
+                    text: commentText,
+                    userId: session.user.email,
+                    displayName: session.user.name,
+                    timestamp: new Date(),
+                  },
+                ],
+              }
+            : post
+        )
+      );
+      setCommentText('');
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: error.message || 'Failed to add comment.',
+      });
+    }
+  };
+
   return (
     <div className="container mx-auto py-10">
       <section className="text-center mb-8">
@@ -165,10 +281,7 @@ export default function CommunityPage() {
               {posts.length > 0 ? (
                 <ul>
                   {posts.map(post => (
-                    <li
-                      key={post.id}
-                      className="py-4 border-b last:border-b-0"
-                    >
+                    <li key={post.id} className="py-4 border-b last:border-b-0">
                       <div className="flex items-center space-x-2 mb-2">
                         <div className="font-semibold">{post.displayName}</div>
                         <div className="text-sm text-muted-foreground">
@@ -188,6 +301,31 @@ export default function CommunityPage() {
                         </div>
                       )}
                       <p>{post.text}</p>
+                      <div className="flex items-center space-x-4 mt-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => (post.likes.includes(session.user.email) ? unlikePost(post.id) : likePost(post.id))}
+                        >
+                          <Heart
+                            className={`h-5 w-5 ${post.likes.includes(session.user.email) ? 'text-red-500' : ''}`}
+                          />
+                          <span>{post.likes.length}</span>
+                        </Button>
+
+                        <div>
+                          <Input
+                            type="text"
+                            placeholder="Add a comment..."
+                            value={commentText}
+                            onChange={e => setCommentText(e.target.value)}
+                            className="rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          />
+                          <Button variant="outline" size="sm" onClick={() => addComment(post.id)}>
+                            Comment
+                          </Button>
+                        </div>
+                      </div>
                       {post.userId === session?.user?.email && (
                         <div className="mt-2">
                           <Button variant="outline" size="sm" onClick={() => deletePost(post.id)}>
@@ -195,6 +333,18 @@ export default function CommunityPage() {
                           </Button>
                         </div>
                       )}
+
+                      {post.comments.map((comment: any, index: number) => (
+                        <div key={index} className="mt-2 ml-4">
+                          <div className="flex items-center space-x-2">
+                            <div className="font-semibold">{comment.displayName}</div>
+                            <div className="text-sm text-muted-foreground">
+                              {comment.timestamp?.toDate().toLocaleTimeString()}
+                            </div>
+                          </div>
+                          <p>{comment.text}</p>
+                        </div>
+                      ))}
                     </li>
                   ))}
                 </ul>
@@ -212,5 +362,3 @@ export default function CommunityPage() {
     </div>
   );
 }
-
-import {getAuth} from 'firebase/auth';
