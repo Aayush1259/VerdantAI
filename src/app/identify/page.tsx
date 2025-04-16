@@ -40,7 +40,7 @@ export default function IdentifyPlantPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [useCamera, setUseCamera] = useState(false); // State to toggle camera view
   const { toast } = useToast();
-    const router = useRouter();
+  const router = useRouter();
 
   useEffect(() => {
     const getCameraPermission = async () => {
@@ -99,6 +99,7 @@ export default function IdentifyPlantPage() {
     }
   };
 
+
   const handleIdentifyPlant = async () => {
     setLoading(true);
     try {
@@ -118,7 +119,8 @@ export default function IdentifyPlantPage() {
         title: "Plant Identified!",
         description: `Successfully identified the plant as ${result.commonName}.`,
       });
-    } catch (error: any) {
+    }
+    catch (error: any) {
       toast({
         variant: "destructive",
         title: "Error",
@@ -129,16 +131,16 @@ export default function IdentifyPlantPage() {
     }
   };
 
-    const handleSampleImageClick = (imageUrl: string) => {
-        setPhotoUrl(imageUrl);
-    };
+  const handleSampleImageClick = (imageUrl: string) => {
+    setPhotoUrl(imageUrl);
+  };
 
   return (
     <div className="container mx-auto py-10">
       {/* Back Navigation */}
       <Button variant="ghost" onClick={() => router.back()} className="mb-4">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Plant Identification
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        Plant Identification
       </Button>
       <section className="text-center mb-8">
         <h1 className="text-3xl font-semibold mb-2"></h1>
@@ -151,10 +153,10 @@ export default function IdentifyPlantPage() {
           {!photoUrl && (
             <div className="relative w-full h-64 rounded-md overflow-hidden flex items-center justify-center bg-secondary">
               {Icons.image ? (
-                  <Icons.image className="h-12 w-12 text-muted-foreground" />
-                ) : (
-                  <p className="text-sm text-muted-foreground">Image Icon Missing</p>
-                )}
+                <Icons.image className="h-12 w-12 text-muted-foreground" />
+              ) : (
+                <p className="text-sm text-muted-foreground">Image Icon Missing</p>
+              )}
               <p className="text-sm text-muted-foreground">Upload a photo to identify</p>
             </div>
           )}
@@ -172,25 +174,27 @@ export default function IdentifyPlantPage() {
             </div>
           )}
           <div className="flex justify-around space-x-2">
-                <Button type="button" variant="secondary" onClick={() => setUseCamera(!useCamera)}>
-                    {useCamera ? "Close Camera" : "Take Photo"}
-                    <Camera className="ml-2 h-4 w-4" />
-                </Button>
+            <Button type="button" variant="secondary" onClick={() => setUseCamera(!useCamera)}>
+              {useCamera ? "Close Camera" : "Take Photo"}
+              <Camera className="ml-2 h-4 w-4" />
+            </Button>
 
-                <Input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                    id="identify-image-upload"
-                />
-                <label htmlFor="identify-image-upload">
-                    <Button type="button" variant="outline">
-                        Choose from Gallery
-                        <ImagePlus className="ml-2 h-4 w-4" />
-                    </Button>
-                </label>
+            <div className="relative">
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+                id="identify-image-upload"
+              />
+              <label htmlFor="identify-image-upload">
+                <Button type="button" variant="outline">
+                  Choose from Gallery
+                  <ImagePlus className="ml-2 h-4 w-4" />
+                </Button>
+              </label>
             </div>
+          </div>
 
 
           {useCamera && hasCameraPermission && (
@@ -213,24 +217,24 @@ export default function IdentifyPlantPage() {
               </Button>
             </div>
           )}
-            {/* Sample Images */}
-            <div>
-                <p className="text-center text-sm text-muted-foreground mt-4">Or pick a sample image:</p>
-                <div className="flex justify-center space-x-2 mt-2">
-                    {sampleImages.map((imageUrl, index) => (
-                        <Image
-                            key={index}
-                            src={imageUrl}
-                            alt={`Sample Plant ${index + 1}`}
-                            width={80}
-                            height={80}
-                            className="rounded-md cursor-pointer"
-                            onClick={() => handleSampleImageClick(imageUrl)}
-                            priority={true}
-                        />
-                    ))}
-                </div>
+          {/* Sample Images */}
+          <div>
+            <p className="text-center text-sm text-muted-foreground mt-4">Or pick a sample image:</p>
+            <div className="flex justify-center space-x-2 mt-2">
+              {sampleImages.map((imageUrl, index) => (
+                <Image
+                  key={index}
+                  src={imageUrl}
+                  alt={`Sample Plant ${index + 1}`}
+                  width={80}
+                  height={80}
+                  className="rounded-md cursor-pointer"
+                  onClick={() => handleSampleImageClick(imageUrl)}
+                  priority={true}
+                />
+              ))}
             </div>
+          </div>
 
 
           <Button onClick={handleIdentifyPlant} disabled={loading || !photoUrl}>
@@ -331,23 +335,23 @@ export default function IdentifyPlantPage() {
           </Card>
         </div>
       )}
-         {/* Bottom Navigation */}
-         <footer className="fixed bottom-0 left-0 w-full bg-secondary py-2 border-t border-gray-200">
-            <nav className="flex justify-around">
-                <Button variant="ghost" className="flex flex-col items-center justify-center" onClick={() => router.push('/')}>
-                    <Home className="h-5 w-5 mb-1" />
-                    <span className="text-xs">Home</span>
-                </Button>
-                <Button variant="ghost" className="flex flex-col items-center justify-center" onClick={() => router.push('/assistant')}>
-                    <Icons.help className="h-5 w-5 mb-1" />
-                    <span className="text-xs">Green AI</span>
-                </Button>
-                <Button variant="ghost" className="flex flex-col items-center justify-center" onClick={() => router.push('/garden')}>
-                    <Icons.user className="h-5 w-5 mb-1" />
-                    <span className="text-xs">Profile</span>
-                </Button>
-            </nav>
-        </footer>
+      {/* Bottom Navigation */}
+      <footer className="fixed bottom-0 left-0 w-full bg-secondary py-2 border-t border-gray-200">
+        <nav className="flex justify-around">
+          <Button variant="ghost" className="flex flex-col items-center justify-center" onClick={() => router.push('/')}>
+            <Home className="h-5 w-5 mb-1" />
+            <span className="text-xs">Home</span>
+          </Button>
+          <Button variant="ghost" className="flex flex-col items-center justify-center" onClick={() => router.push('/assistant')}>
+            <Icons.help className="h-5 w-5 mb-1" />
+            <span className="text-xs">Green AI</span>
+          </Button>
+          <Button variant="ghost" className="flex flex-col items-center justify-center" onClick={() => router.push('/garden')}>
+            <Icons.user className="h-5 w-5 mb-1" />
+            <span className="text-xs">Profile</span>
+          </Button>
+        </nav>
+      </footer>
     </div>
   );
 }
